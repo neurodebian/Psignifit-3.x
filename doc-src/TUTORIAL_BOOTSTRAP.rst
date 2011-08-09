@@ -122,7 +122,7 @@ We suggest to perform a Sensitivity Analysis on the BootstrapInference object. I
 
 >>> B_single_sessions.getCI(0.5)
 array([ 0.04655731,  0.07565797])
->>> plotSensitivity(B)
+>>> psi.plotSensitivity(B_single_sessions)
 >>> B_single_sessions.getCI(0.5)
 array([-5.35198839,  0.07944721])
 
