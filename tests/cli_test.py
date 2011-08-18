@@ -32,6 +32,7 @@ def getvariable ( varname, datastring ):
     return v
 
 class TestCLImapestimate ( ut.TestCase ):
+
     def test_2afc ( self ):
         f = open ( ".testdata", "w" )
         writedata ( f, data2afc )
