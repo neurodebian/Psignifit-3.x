@@ -128,15 +128,12 @@ class TestCLImapestimate ( ut.TestCase ):
         os.remove ( ".testresults1e" )
 
 class TestCLIdiagnostics ( ut.TestCase ):
+
     def test_2afc ( self ):
-        f = open ( ".testdata", "w" )
-        writedata ( f, data2afc )
-        f.close()
-        cmd = "psignifit-diagnostics -nafc 2 -params '4,2,.02' .testdata -o .testdiag2"
+        write_file( ".testdata", data2afc )
+        cmd = "./cli/psignifit-diagnostics -nafc 2 -params '4,2,.02' .testdata -o .testdiag2"
         os.system ( cmd )
-        f = open ( ".testdiag2" )
-        diagnostics = f.read()
-        f.close()
+        diagnostics = read_data(".testdiag2")
 
         prediction = np.reshape ( getvariable ( "prediction", diagnostics ), (-1,2) )
         self.assertAlmostEqual ( prediction[0,1], 0.500073 )
@@ -172,14 +169,10 @@ class TestCLIdiagnostics ( ut.TestCase ):
         os.remove ( ".testdiag2" )
 
     def test_1afc ( self ):
-        f = open ( ".testdata", "w" )
-        writedata ( f, data1afc )
-        f.close()
-        cmd = "psignifit-diagnostics -nafc 1 -params '4,2,.02,.01' .testdata -o .testdiag1"
+        write_file( ".testdata", data1afc )
+        cmd = "./cli/psignifit-diagnostics -nafc 1 -params '4,2,.02,.01' .testdata -o .testdiag1"
         os.system ( cmd )
-        f = open ( ".testdiag1" )
-        diagnostics = f.read ()
-        f.close()
+        diagnostics = read_data(".testdiag1")
 
         prediction = np.reshape ( getvariable ( "prediction", diagnostics ), (-1,2) )
         self.assertAlmostEqual ( prediction[0,1], 0.010148 )
@@ -215,14 +208,10 @@ class TestCLIdiagnostics ( ut.TestCase ):
         os.remove ( ".testdiag1" )
 
     def test_1afc_e ( self ):
-        f = open ( ".testdata", "w" )
-        writedata ( f, data1afc )
-        f.close()
-        cmd = "psignifit-diagnostics -nafc 1 -e -params '4,2,.02' .testdata -o .testdiag1e"
+        write_file( ".testdata", data1afc )
+        cmd = "./cli/psignifit-diagnostics -nafc 1 -e -params '4,2,.02' .testdata -o .testdiag1e"
         os.system ( cmd )
-        f = open ( ".testdiag1e" )
-        diagnostics = f.read ()
-        f.close()
+        diagnostics = read_data(".testdiag1e")
 
         prediction = np.reshape ( getvariable ( "prediction", diagnostics ), (-1,2) )
         self.assertAlmostEqual ( prediction[0,1], 0.020146 )
