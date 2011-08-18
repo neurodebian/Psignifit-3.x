@@ -35,7 +35,7 @@ class TestCLImapestimate ( ut.TestCase ):
         f = open ( ".testdata", "w" )
         writedata ( f, data2afc )
         f.close()
-        cmd = "psignifit-mapestimate -nafc 2 .testdata -o .testresults2"
+        cmd = "./cli/psignifit-mapestimate -nafc 2 .testdata -o .testresults2"
         os.system ( cmd )
         f = open ( ".testresults2" )
         results = f.read()
@@ -72,7 +72,7 @@ class TestCLImapestimate ( ut.TestCase ):
         f = open ( ".testdata", "w" )
         writedata ( f, data1afc )
         f.close()
-        cmd = "psignifit-mapestimate -nafc 1 .testdata -o .testresults1"
+        cmd = "./cli/psignifit-mapestimate -nafc 1 .testdata -o .testresults1"
         os.system ( cmd )
         f = open ( ".testresults1" )
         results = f.read()
@@ -117,7 +117,7 @@ class TestCLImapestimate ( ut.TestCase ):
         f = open ( ".testdata", "w" )
         writedata ( f, data1afc )
         f.close()
-        cmd = "psignifit-mapestimate -nafc 1 -e .testdata -o .testresults1e"
+        cmd = "./cli/psignifit-mapestimate -nafc 1 -e .testdata -o .testresults1e"
         os.system ( cmd )
         f = open ( ".testresults1e" )
         results = f.read()
