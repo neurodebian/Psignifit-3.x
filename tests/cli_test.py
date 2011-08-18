@@ -31,17 +31,24 @@ def getvariable ( varname, datastring ):
     v = np.fromstring ( m.group(1), sep=' ' )
     return v
 
+def write_file(filename, data):
+    f = open (filename, "w" )
+    writedata ( f, data)
+    f.close()
+
+def read_data(filename):
+    f = open (filename)
+    results = f.read()
+    f.close()
+    return results
+
 class TestCLImapestimate ( ut.TestCase ):
 
     def test_2afc ( self ):
-        f = open ( ".testdata", "w" )
-        writedata ( f, data2afc )
-        f.close()
+        write_file(".testdata", data2afc)
         cmd = "./cli/psignifit-mapestimate -nafc 2 .testdata -o .testresults2"
         os.system ( cmd )
-        f = open ( ".testresults2" )
-        results = f.read()
-        f.close()
+        results = read_data(".testresults2")
 
         params_estimate = getvariable ( "params_estimate", results )
         npt.assert_almost_equal(np.array([2.751811, 6.403992, 0.015556]),
@@ -64,14 +71,10 @@ class TestCLImapestimate ( ut.TestCase ):
         os.remove ( ".testresults2" )
 
     def test_1afc ( self ):
-        f = open ( ".testdata", "w" )
-        writedata ( f, data1afc )
-        f.close()
+        write_file( ".testdata", data1afc )
         cmd = "./cli/psignifit-mapestimate -nafc 1 .testdata -o .testresults1"
         os.system ( cmd )
-        f = open ( ".testresults1" )
-        results = f.read()
-        f.close()
+        results = read_data(".testresults1")
 
         params_estimate = getvariable ( "params_estimate", results )
         npt.assert_almost_equal(
@@ -98,14 +101,10 @@ class TestCLImapestimate ( ut.TestCase ):
         os.remove ( ".testresults1" )
 
     def test_1afc_e ( self ):
-        f = open ( ".testdata", "w" )
-        writedata ( f, data1afc )
-        f.close()
+        write_file( ".testdata", data1afc )
         cmd = "./cli/psignifit-mapestimate -nafc 1 -e .testdata -o .testresults1e"
         os.system ( cmd )
-        f = open ( ".testresults1e" )
-        results = f.read()
-        f.close()
+        results = read_data(".testresults1e")
 
         params_estimate = getvariable ( "params_estimate", results )
         npt.assert_almost_equal(np.array([3.210565, 6.263347, 0.001736]),
