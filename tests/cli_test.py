@@ -73,8 +73,6 @@ class TestCLImapestimate ( ut.TestCase ):
         results = f.read()
         f.close()
 
-        print results
-
         params_estimate = getvariable ( "params_estimate", results )
         npt.assert_almost_equal(
                 np.array([3.083399,  6.205041,  0.008424, 0.001264]),
@@ -109,29 +107,23 @@ class TestCLImapestimate ( ut.TestCase ):
         results = f.read()
         f.close()
 
-        th = getvariable ( "thetahat", results )
-        self.assertAlmostEqual ( th[0], 3.210313 )
-        self.assertAlmostEqual ( th[1], 6.261821)
-        self.assertAlmostEqual ( th[2], 0.001765 )
+        params_estimate = getvariable ( "params_estimate", results )
+        npt.assert_almost_equal(np.array([3.210565, 6.263347, 0.001736]),
+                params_estimate)
 
         fisher = np.reshape( getvariable ( "fisher_info", results ), (3,3) )
-        self.assertAlmostEqual ( fisher[0,0], -16.421624 )
-        self.assertAlmostEqual ( fisher[0,1], -0.571775 )
-        self.assertAlmostEqual ( fisher[0,2], -133.113719 )
-        self.assertAlmostEqual ( fisher[1,0], -0.571775 )
-        self.assertAlmostEqual ( fisher[1,1], -1.977617 )
-        self.assertAlmostEqual ( fisher[1,2], -78.395747 )
-        self.assertAlmostEqual ( fisher[2,0], -133.113719 )
-        self.assertAlmostEqual ( fisher[2,1], -78.395747 )
-        self.assertAlmostEqual ( fisher[2,2], -10130.614861 )
+        fisher_target=([
+        [-16.420808, -0.572442, -133.335785],
+        [-0.572442, -1.977916, -78.635886],
+        [-133.335785, -78.635886, -10162.001395]])
+        npt.assert_almost_equal(fisher_target, fisher)
 
         thres = getvariable ( "thres", results )
-        self.assertAlmostEqual ( thres[0], 1.644858 )
-        self.assertAlmostEqual ( thres[1], 3.210313 )
-        self.assertAlmostEqual ( thres[2], 4.775768 )
+
+        npt.assert_almost_equal(np.array([1.644729, 3.210565, 4.776402]), thres )
 
         D = float ( getvariable ( "deviance", results ) )
-        self.assertAlmostEqual ( D, 10.616 )
+        self.assertAlmostEqual ( D,  10.615999 )
 
         os.remove ( ".testdata" )
         os.remove ( ".testresults1e" )
