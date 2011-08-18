@@ -73,37 +73,28 @@ class TestCLImapestimate ( ut.TestCase ):
         results = f.read()
         f.close()
 
-        th = getvariable ( "thetahat", results )
-        self.assertAlmostEqual ( th[0], 3.268666 )
-        self.assertAlmostEqual ( th[1], 6.050049 )
-        self.assertAlmostEqual ( th[2], 0.004847 )
-        self.assertAlmostEqual ( th[3], 0.021376 )
+        print results
+
+        params_estimate = getvariable ( "params_estimate", results )
+        npt.assert_almost_equal(
+                np.array([3.083399,  6.205041,  0.008424, 0.001264]),
+                    params_estimate)
 
         fisher = np.reshape( getvariable ( "fisher_info", results ), (4,4) )
-        self.assertAlmostEqual ( fisher[0,0], -15.996856 )
-        self.assertAlmostEqual ( fisher[0,1], -0.544973 )
-        self.assertAlmostEqual ( fisher[0,2], -112.664222 )
-        self.assertAlmostEqual ( fisher[0,3],  62.230531 )
-        self.assertAlmostEqual ( fisher[1,0], -0.544973 )
-        self.assertAlmostEqual ( fisher[1,1], -1.933384 )
-        self.assertAlmostEqual ( fisher[1,2], -57.822245 )
-        self.assertAlmostEqual ( fisher[1,3], -8.574196 )
-        self.assertAlmostEqual ( fisher[2,0], -112.664222 )
-        self.assertAlmostEqual ( fisher[2,1], -57.822245 )
-        self.assertAlmostEqual ( fisher[2,2], -7375.069598 )
-        self.assertAlmostEqual ( fisher[2,3],  247.270163 )
-        self.assertAlmostEqual ( fisher[3,0],  62.230531 )
-        self.assertAlmostEqual ( fisher[3,1], -8.574196 )
-        self.assertAlmostEqual ( fisher[3,2],  247.270163 )
-        self.assertAlmostEqual ( fisher[3,3],  -395.088389 )
+
+        fisher_target=np.array([
+        [-16.120443, -0.676028, -101.108519, 59.643436],
+        [-0.676028, -1.806142, -42.365053, -7.585095],
+        [-101.108519, -42.365053, -4685.440083, 229.205209],
+        [59.643436, -7.585095, 229.205209, -368.651562]])
+
+        npt.assert_almost_equal(fisher_target, fisher)
 
         thres = getvariable ( "thres", results )
-        self.assertAlmostEqual ( thres[0], 1.756153 )
-        self.assertAlmostEqual ( thres[1], 3.268666 )
-        self.assertAlmostEqual ( thres[2], 4.781178 )
+        npt.assert_almost_equal(np.array([1.532138, 3.083399, 4.634659]), thres)
 
         D = float ( getvariable ( "deviance", results ) )
-        self.assertAlmostEqual ( D, 11.162991 )
+        self.assertAlmostEqual ( D, 10.779130)
 
         os.remove ( ".testdata" )
         os.remove ( ".testresults1" )
