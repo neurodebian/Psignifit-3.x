@@ -43,22 +43,19 @@ class TestCLImapestimate ( ut.TestCase ):
         results = f.read()
         f.close()
 
-        print results
-
         params_estimate = getvariable ( "params_estimate", results )
         npt.assert_almost_equal(np.array([2.751811, 6.403992, 0.015556]),
-                params_estimate, decimal=4)
+                params_estimate)
 
         fisher = np.reshape( getvariable ( "fisher_info", results ), (3,3) )
         fisher_target=np.array([
         [-4.339626, -0.826830, -58.006021],
         [-0.826830, -0.384935, -25.335098],
         [-58.006021, -25.335098, -6349.211847]])
-        npt.assert_almost_equal(fisher_target, fisher, decimal=4)
+        npt.assert_almost_equal(fisher_target, fisher)
 
         thres = getvariable ( "thres", results )
-        npt.assert_almost_equal(np.array([1.150813, 2.751811, 4.352809]), thres,
-                decimal=4)
+        npt.assert_almost_equal(np.array([1.150813, 2.751811, 4.352809]), thres)
 
         D = float ( getvariable ( "deviance", results ) )
         self.assertAlmostEqual ( D, 8.071331 )
