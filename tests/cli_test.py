@@ -8,6 +8,7 @@ import os
 import unittest as ut
 import re
 import numpy as np
+import numpy.testing as npt
 
 x = [float(2*k) for k in xrange(6)]
 k = [34,32,40,48,50,48]
@@ -41,26 +42,22 @@ class TestCLImapestimate ( ut.TestCase ):
         results = f.read()
         f.close()
 
-        th = getvariable ( "thetahat", results )
-        self.assertAlmostEqual ( th[0], 2.751832 )
-        self.assertAlmostEqual ( th[1], 6.403953 )
-        self.assertAlmostEqual ( th[2], 0.015555 )
+        print results
+
+        params_estimate = getvariable ( "params_estimate", results )
+        npt.assert_almost_equal(np.array([2.751811, 6.403992, 0.015556]),
+                params_estimate, decimal=4)
 
         fisher = np.reshape( getvariable ( "fisher_info", results ), (3,3) )
-        self.assertAlmostEqual ( fisher[0,0], -4.339672 )
-        self.assertAlmostEqual ( fisher[0,1], -0.826837 )
-        self.assertAlmostEqual ( fisher[0,2], -58.007662 )
-        self.assertAlmostEqual ( fisher[1,0], -0.826837 )
-        self.assertAlmostEqual ( fisher[1,1], -0.384938 )
-        self.assertAlmostEqual ( fisher[1,2], -25.336736 )
-        self.assertAlmostEqual ( fisher[2,0], -58.007662 )
-        self.assertAlmostEqual ( fisher[2,1], -25.336736 )
-        self.assertAlmostEqual ( fisher[2,2], -6349.783561 )
+        fisher_target=np.array([
+        [-4.339626, -0.826830, -58.006021],
+        [-0.826830, -0.384935, -25.335098],
+        [-58.006021, -25.335098, -6349.211847]])
+        npt.assert_almost_equal(fisher_target, fisher, decimal=4)
 
         thres = getvariable ( "thres", results )
-        self.assertAlmostEqual ( thres[0], 1.150844 )
-        self.assertAlmostEqual ( thres[1], 2.751832 )
-        self.assertAlmostEqual ( thres[2], 4.352820 )
+        npt.assert_almost_equal(np.array([1.150813, 2.751811, 4.352809]), thres,
+                decimal=4)
 
         D = float ( getvariable ( "deviance", results ) )
         self.assertAlmostEqual ( D, 8.071331 )
