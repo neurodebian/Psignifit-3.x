@@ -175,20 +175,20 @@ swignifit-clean:
 swignifit-test: swignifit-test-raw swignifit-test-interface swignifit-test-utility
 
 swignifit-test-raw: swignifit
-	-PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) tests/swignifit_raw_test.py
+	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) tests/swignifit_raw_test.py
 
 swignifit-test-interface: swignifit
-	-PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) tests/interface_test.py
+	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) tests/interface_test.py
 
 swignifit-test-utility: swignifit
-	-PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) tests/utility_test.py
+	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) tests/utility_test.py
 
 # }}}
 
 #################### PYPSIGNIFIT COMMANDS ################### {{{
 
 pypsignifit-test:
-	-PYTHONPATH=. $(PYTHON) pypsignifit/psignidata.py
+	PYTHONPATH=. $(PYTHON) pypsignifit/psignidata.py
 
 # }}}
 
