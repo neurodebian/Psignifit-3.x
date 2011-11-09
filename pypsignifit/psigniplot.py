@@ -745,6 +745,8 @@ def plotParameterDist ( InferenceObject, parameter=0, ax=None ):
                     ax.plot(x,stats.gamma.pdf(-x,prm1,scale=prm2))
                 elif dist.lower () == "uniform":
                     ax.plot(x,stats.uniform.pdf(x,prm1,prm2))
+                elif dist.lower () == "invgamma":
+                    ax.plot(x,stats.invgamma.pdf(x,prm1,scale=prm2))
 
     # Highlight estimate and credibility intervals
     prm = InferenceObject.estimate[parameter]
