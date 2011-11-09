@@ -17,6 +17,7 @@ EPYDOC_DCOOUT=api
 PSIPP_DOCOUT=psipp-api
 PSIPP_SRC=src
 LIBRARY_PATH=/usr/lib/
+LD_LIBRARY_PATH=src/build
 PYTHON=python
 CLI_SRC=cli
 TODAY=`date +%d-%m-%G`
@@ -174,13 +175,13 @@ swignifit-clean:
 swignifit-test: swignifit-test-raw swignifit-test-interface swignifit-test-utility
 
 swignifit-test-raw: swignifit
-	-PYTHONPATH=. $(PYTHON) tests/swignifit_raw_test.py
+	-PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) tests/swignifit_raw_test.py
 
 swignifit-test-interface: swignifit
-	-PYTHONPATH=. $(PYTHON) tests/interface_test.py
+	-PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) tests/interface_test.py
 
 swignifit-test-utility: swignifit
-	-PYTHONPATH=. $(PYTHON) tests/utility_test.py
+	-PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) tests/utility_test.py
 
 # }}}
 
