@@ -789,7 +789,7 @@ def plotThresholdDist ( InferenceObject, cut=0, ax=None ):
 
     # Highlight estimate and credibility intervals
     thres = InferenceObject.getThres ( InferenceObject.cuts[cut] )
-    c25,c975 = InferenceObject.getCI ( cut, (0.025,0.975) )
+    c25,c975 = InferenceObject.getCI ( cut=cut, conf=(0.025,0.975) )
 
     yl = ax.get_ylim ()
     ax.plot( [c25]*2,yl,'b:', [c975]*2,yl,'b:' )
