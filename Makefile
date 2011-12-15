@@ -107,7 +107,7 @@ test: swignifit-test psipp-test
 
 #################### PYTHON DEFINITIONS ################### {{{
 
-python-install: swig python-version
+python-install: | psipp-build python-version swig
 	$(PYTHON) setup.py install
 
 python-build: | psipp-build swignifit python-version
