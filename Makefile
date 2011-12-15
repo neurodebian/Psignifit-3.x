@@ -11,12 +11,12 @@
 #################### VARIABLE DEFINITIONS ################### {{{
 
 SHELL=/bin/bash
-CLI_INSTALL=/usr/bin
+CLI_INSTALL=$(DESTDIR)/usr/bin
 SPHINX_DOCOUT=doc-html
 EPYDOC_DCOOUT=api
 PSIPP_DOCOUT=psipp-api
 PSIPP_SRC=src
-LIBRARY_PATH=/usr/lib/
+LIBRARY_PATH=$(DESTDIR)/usr/lib/
 LD_LIBRARY_PATH=src/build
 PYTHON=python
 CLI_SRC=cli
@@ -95,7 +95,7 @@ EPYDOC_TARGET=swignifit pypsignifit
 
 build: python-build
 
-install: python-install
+install: python-install psipp-install
 
 doc: python-doc psipp-doc
 
@@ -108,7 +108,11 @@ test: swignifit-test psipp-test
 #################### PYTHON DEFINITIONS ################### {{{
 
 python-install: | psipp-build python-version swig
-	$(PYTHON) setup.py install
+	if [ -n "$(DESTDIR)" ] ; then \
+		$(PYTHON) setup.py install --home=$(DESTDIR);\
+	else \
+		$(PYTHON) setup.py install;\
+	fi
 
 python-build: | psipp-build swignifit python-version
 
@@ -141,6 +145,9 @@ psipp-build:
 	cd $(PSIPP_SRC) && $(MAKE)
 
 psipp-install: psipp-build
+	if ! [ -d $(LIBRARY_PATH) ] ; then\
+		mkdir -p $(LIBRARY_PATH);\
+	fi
 	cp $(PSIPP_SRC)/build/libpsipp.so $(LIBRARY_PATH)/
 
 psipp-doc:
