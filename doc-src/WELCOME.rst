@@ -51,13 +51,18 @@ Getting in touch
 
 To contact the authors and current maintainers please use:
 
-    Psignifit-users@lists.sourceforge.net
+    psignifit-users@lists.sourceforge.net
 
 
 This list can be used to ask questions about usage and installation, report
-bugs, and request new features. If you use Psignifit we recommend you
-`subscribe <https://lists.sourceforge.net/lists/listinfo/psignifit-users>`_
-to this list.
+bugs, and request new features. If you use Psignifit on a regular basis we
+recommend you `subscribe
+<https://lists.sourceforge.net/lists/listinfo/psignifit-users>`_ to this list.
+
+.. note:: Non-member postings are allowed so you do not need to subscribe to the
+          list, to post to it. However, we recommend you mention that you are not
+          subscribed, so that we don't forget to include you in our reply.
+
 
 ************************
 Authors and Contributors
