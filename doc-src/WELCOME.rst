@@ -63,6 +63,13 @@ recommend you `subscribe
           list, to post to it. However, we recommend you mention that you are not
           subscribed, so that we don't forget to include you in our reply.
 
+Discussions about development and Psignifit internals happen on:
+
+    psignifit-devel@lists.sourceforge.net
+
+Subscribe `here <https://lists.sourceforge.net/lists/listinfo/psignifit-devel>`_
+if you plan to contribute or simply want to follow development.
+
 
 ************************
 Authors and Contributors
