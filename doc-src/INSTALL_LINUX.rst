@@ -1,6 +1,15 @@
 Debian/Ubuntu
 =============
 
+This section details how to install the Python version and the command line
+version of Psignifit.
+
+.. contents::
+    :depth: 2
+
+Installing Psignifit for Python (python-psignifit)
+--------------------------------------------------
+
 If you are using `Debian <http://www.debian.org/>`_, the following packages need to be installed:
 
 * ``make``
@@ -37,7 +46,7 @@ Extract the file by typing::
 where you replace <date of the snapshot> by the date string in the file name.
 
 System-wide installation
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 On the command line, navigate to the root directory of the psignifit distribution. Now, you can simply type::
 
     sudo python setup.py install
@@ -51,7 +60,7 @@ the section `Install into users home directory`_.
 
 
 Install into users home directory
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 If you do not have root/admin rights on your computer the setup routine allows installation into your home-directory.
 You may install psignifit locally by typing::
 
@@ -74,8 +83,8 @@ Yet another option is to set the ``$PYTHONPATH`` variable directly from the
 Python interpreter using the ``os`` module.
 
 
-Installing the command line interface (optional)
-------------------------------------------------
+Installing the Command Line Interface (cli)
+-------------------------------------------
 
 Download psignifit from `sourceforge <http://sourceforge.net/projects/psignifit/files/>`_ and
 extract the compressed file to a folder in your home directory. Navigate into the folder.
@@ -109,7 +118,7 @@ Now, you should be able to call::
 And see some usage messages after each call.
 
 
-Testing your installation (optional)
+Testing your Installation (optional)
 ------------------------------------
 
 To check whether your installation has been successful and pypsignifit is working properly, you can call::
