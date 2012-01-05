@@ -166,16 +166,29 @@ psipp-test:
 # }}}
 
 ################### CLI COMMANDS ###################### {{{
+
 cli-install:  cli-version cli-build psipp-install
-	if [ -d $(CLI_INSTALL) ]; then echo $(CLI_INSTALL) " exists adding files"; else	mkdir $(CLI_INSTALL); echo ""; echo ""; echo ""; echo "WARNING: I had to create " $(CLI_INSTALL) "you will most probably have to add it to your PATH"; echo ""; echo ""; echo ""; fi
-	cd $(CLI_SRC) && cp psignifit-mcmc psignifit-diagnostics psignifit-bootstrap psignifit-mapestimate $(CLI_INSTALL)
+	if [ -d $(CLI_INSTALL) ]; then \
+		echo $(CLI_INSTALL) " exists adding files"; \
+	else \
+		mkdir $(CLI_INSTALL); \
+		echo ""; echo ""; echo ""; \
+		echo "WARNING: I had to create " $(CLI_INSTALL) "you will most probably have to add it to your PATH"; \
+		echo ""; echo ""; echo ""; \
+	fi
+	cd $(CLI_SRC) &&
+	cp psignifit-mcmc psignifit-diagnostics psignifit-bootstrap psignifit-mapestimate $(CLI_INSTALL)
+
 cli-build: cli-version
 	cd $(CLI_SRC) && $(MAKE)
+
 cli-clean:
 	cd $(CLI_SRC) && $(MAKE) clean
 	-rm $(CLI_VERSION_HEADER)
+
 cli-test: cli-install
 	$(PYTHON) tests/cli_test.py
+
 cli-uninstall:
 	rm $(CLI_INSTALL)/psignifit-mcmc
 	rm $(CLI_INSTALL)/psignifit-diagnostics
@@ -189,6 +202,7 @@ cli-version:
 		echo "#define VERSION \""$(GIT_DESCRIPTION)"\"" >> $(CLI_VERSION_HEADER) ; \
 		echo "#endif" >> $(CLI_VERSION_HEADER) ; \
 	fi
+
 # }}}
 
 #################### SWIGNIFIT COMMANDS ################### {{{
