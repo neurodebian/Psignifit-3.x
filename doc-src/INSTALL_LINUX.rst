@@ -1,103 +1,160 @@
-Debian/Ubuntu
-=============
+Linux (Debian/Ubuntu)
+=====================
 
-If you are using `Debian <http://www.debian.org/>`_, the following packages need to be installed:
+This section details how to install the Python version and the command line
+version of Psignifit from a source download.
+
+In either case you should proceed in the following order:
+
+* `Obtaining the Sources`_
+* `Installing Dependencies`_
+
+And then continue to install the desired version:
+
+* `Installing Psignifit for Python (python-psignifit)`_
+
+Or:
+
+* `Installing the Command Line Interface (cli)`_
+
+If you need to build the documentation on your local machine, you may want to
+look at:
+
+* `Building the documentation`_
+
+Obtaining the Sources
+---------------------
+
+You will want to download the most recent version of psignifit from:
+`<http://sourceforge.net/.projects/psignifit/files/>`_. You will want the
+``zip`` file, for example ``psignifit3.0_beta_28-10-2011.zip``.
+
+Extract the file, and enter the directory by typing::
+
+    unzip psignifit3.0_beta_<date of the snapshot>.zip
+    cd psignifit3.0_beta_<date of the snapshot>
+
+replacing ``<date of the snapshot>`` by the date string in the file
+name.
+
+Installing Dependencies
+-----------------------
+
+If you are using `Debian <http://www.debian.org/>`_ or `Ubuntu
+<http://www.ubuntu.com/>`_ the following packages need to be installed.
 
 * ``make``
 * ``gcc``
+
+If  you additionally wish to install the Python version, you must install:
+
 * ``python``
 * ``python-dev``
 * ``python-numpy (provides python-numpy-dev)``
 * ``python-scipy``
 * ``python-matplotlib``
-* ``python-sphinx``
-* ``doxygen``
 * ``python-nose``
 * ``swig``
 
 In order to check whether or not you have the packages already installed, type::
 
-    aptitude search make gcc python python-dev python-numpy python-scipy python-matplotlib python-nose
+    aptitude search make gcc python python-dev\
+        python-numpy python-scipy python-matplotlib python-nose swig
 
-Packages that are installed on your machine are listed with a leading <i>
+Packages that are installed on your machine are listed with a leading ``<i>``
 
 In order to install missing packages, type::
 
-    sudo aptitude install make gcc python python-dev python-numpy python-scipy python-matplotlib python-nose
+    sudo aptitude install make gcc python python-dev\
+        python-numpy python-scipy python-matplotlib python-nose
 
-You will want to download the most recent version of psignifit from::
+If you are using a different Linux distribution, please refer to the
+documentation of that system for more information on how to install the required
+software.
 
-`Psignifit3 Downloads <http://sourceforge.net/.projects/psignifit/files/>`_
-
-Extract the file by typing::
-
-    unzip psignifit3.0_beta_<date of the snapshot>.zip
-    cd psignifit3.0_beta_<date of the snapshot>
-
-where you replace <date of the snapshot> by the date string in the file name.
+Installing Psignifit for Python (python-psignifit)
+--------------------------------------------------
 
 System-wide installation
-------------------------
-On the command line, navigate to the root directory of the psignifit distribution. Now, you can simply type::
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-    sudo python setup.py install
+Installing system wide is simple, type::
 
-as root and everything will be installed to the right place.
+    make install
 
-If you want a special flavor of the Python installation and are familiar with using Python
-setup-scripts, you can also use special options for the installation, by
-executing the ``setup.py`` script explicitly. An example can be found in
-the section `Install into users home directory`_.
+as ``root`` and everything will be installed to the right place.
 
+Install into a Custom Location
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Install into users home directory
----------------------------------
-If you do not have root/admin rights on your computer the setup routine allows installation into your home-directory.
-You may install psignifit locally by typing::
+If you do not have root privileges, you can use the ``DESTDIR`` variable to
+install into an alternative location, for example the directory
+``psignifit-install`` in your home-directory::
 
-    python setup.py install --home=$HOME
+    mkdir $HOME/psignifit-install
+    make DESTDIR=$HOME/psignifit-install install
 
-where ``$HOME`` should be automatically replaced by the name of your own home-directory.
-This command will install psignifit into ``$HOME/lib/python/psignifit``.
-To use psignifit from this path, you will also have to set the ``$PYTHONPATH``
-variable. Either you invoke the Python interpreter from the commandline by
-calling::
+The first command first creates the directory ``$HOME/psignifit-install``
+where ``$HOME`` is automatically replaced by the name of your own
+home-directory.  The second command will install Psignifit into that directory.
 
-    PYTHONPATH=$HOME/lib/python python
+To use psignifit from, you will also have to set the ``$PYTHONPATH`` and
+``$LD_LIBRARY_PATH`` environment variables. Either invoke the Python
+interpreter from the command line by typing::
 
-or you set the ``$PYTHONPATH`` variable in your ``.bashrc`` (or equivalent) file
+   PYTHONPATH=psignifit-install/lib/python/ LD_LIBRARY_PATH=psignifit-install/usr/lib/ ipython
+
+Or, you set the variables in your ``.bashrc`` (or equivalent) file
 by adding the line::
 
-    export PYTHONPATH=$HOME/lib/python
+   export PYTHONPATH=psignifit-install/lib/python/
+   export LD_LIBRARY_PATH=psignifit-install/usr/lib/
 
-Yet another option is to set the ``$PYTHONPATH`` variable directly from the
-Python interpreter using the ``os`` module.
+Testing your Installation
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Open a Python interpreter and type::
 
-Installing the command line interface (optional)
-------------------------------------------------
+    import pypsignifit
+    pypsignifit.version
 
-Download psignifit from `sourceforge <http://sourceforge.net/projects/psignifit/files/>`_ and
-extract the compressed file to a folder in your home directory. Navigate into the folder.
-You have two installation options. By default, the command line interface will be installed to a
-folder called ``bin`` in your home directory. You can change this behavior by editing the
-``Makefile``. At the beginning of the ``Makefile``, you find a line::
+If you can see a version string, such as ``snap-2011-10-28-31-g9288222`` you
+installation was probably successful.
 
-    CLI_INSTALL=$(HOME)/bin
+Installing the Command Line Interface (cli)
+-------------------------------------------
 
-replace this by e.g. ``/usr/bin/`` for system wide installation.
-
-Once you have the Makefile in your desired shape type::
+System-wide installation
+~~~~~~~~~~~~~~~~~~~~~~~~
+Installing system wide is simple, type::
 
     make cli-install
 
-If the installation directory is not on your system search path, you may have to add it.
-To do so, add::
+as ``root`` and everything will be installed to the right place.
 
-    export PATH=$PATH:$HOME/bin
+Install into a Custom Location
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+If you do not have root privileges, you can use the ``DESTDIR`` variable to
+install into an alternative location, for example the directory
+``psignifit-install`` in your home-directory::
 
-to your ``.bashrc`` (if you use bash). If you use zsh, the same line should be in your
-``.zshrc.local`` file.
+    mkdir $HOME/psignifit-install
+    make DESTDIR=$HOME/psignifit-install cli-install
+
+The first command first creates the directory ``$HOME/psignifit-install``
+where ``$HOME`` is automatically replaced by the name of your own
+home-directory.  The second command will install Psignifit into that directory.
+
+Additionally you must add the installation directory to you ``$PATH``, by
+typing::
+
+    export PATH=$PATH:$HOME/psignifit-install/usr/bin
+
+Or, for a more permanent solution and the above line to ``.bashrc`` (or
+equivalent) file.
+
+Testing your Installation
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Now, you should be able to call::
 
@@ -108,16 +165,19 @@ Now, you should be able to call::
 
 And see some usage messages after each call.
 
+Building the documentation
+--------------------------
 
-Testing your installation (optional)
-------------------------------------
+We recommend you to use the documentation we supply on the website. But in case
+you would like to build it locally, you must first install the following
+packages:
 
-To check whether your installation has been successful and pypsignifit is working properly, you can call::
+* ``python-sphinx``
+* ``doxygen``
 
-    make test
+And then do::
 
-This will call the standard test suite for psignifit.
+    make doc
 
-NOTE: Currently a couple of tests report failures although they actually pass. This will change in the future.
-But for now, don't be too alarmed if tests fail. As long as you can start the tests at all, everything is probably ok.
-
+The documentation can be found in ``doc-html/``. Point your browser at
+``doc-html/index.html`` to begin.
