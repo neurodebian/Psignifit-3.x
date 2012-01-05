@@ -179,7 +179,7 @@ cli-install:  cli-version cli-build psipp-install
 	cd $(CLI_SRC) &&
 	cp psignifit-mcmc psignifit-diagnostics psignifit-bootstrap psignifit-mapestimate $(CLI_INSTALL)
 
-cli-build: cli-version
+cli-build: cli-version psipp-build
 	cd $(CLI_SRC) && $(MAKE)
 
 cli-clean:
