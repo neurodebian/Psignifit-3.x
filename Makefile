@@ -176,7 +176,7 @@ cli-install:  cli-version cli-build psipp-install
 		echo "WARNING: I had to create " $(CLI_INSTALL) "you will most probably have to add it to your PATH"; \
 		echo ""; echo ""; echo ""; \
 	fi
-	cd $(CLI_SRC) &&
+	cd $(CLI_SRC) &&\
 	cp psignifit-mcmc psignifit-diagnostics psignifit-bootstrap psignifit-mapestimate $(CLI_INSTALL)
 
 cli-build: cli-version psipp-build
