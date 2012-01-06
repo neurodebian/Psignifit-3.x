@@ -12,8 +12,6 @@
 """ setup.py for Psignifit 3.x """
 
 from distutils.core import setup, Extension
-import numpy
-import os
 
 # metadata definitions
 name = "pypsignifit"
