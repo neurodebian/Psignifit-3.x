@@ -1,23 +1,47 @@
 Psignifit for Matlab users
 ==========================
 
-In order to use psignifit from within Matlab (mpsignifit), you have to install both, the command line interface (of your respective operating system) as well as mpsignifit.
+In order to use Psignifit from within Matlab (mpsignifit), you have to install
+both the Command Line Interface (for your respective operating system) as well
+as mpsignifit. The installation instructions for the Command Line Interface
+can be found in:
 
-Installing the mpsignifit files
--------------------------------
+* :doc:`INSTALL_LINUX`
+* :doc:`INSTALL_MAC`
+* :doc:`INSTALL_WINDOWS`
 
-If you have not yet obtained a copy of the psignifit sources, get one from `sourceforge <http://sourceforge.net/projects/psignifit/files/>`_.
-The file will most probably be a file ending either with ``.tar.gz`` or with ``.zip``.
-Unpack the file and navigate to the unpacked folder. Within that folder there is (among
-other things) one folder called ``mpsignifit``. Copy this folder to a save place (e.g. the
-``toolbox`` folder in your Matlab installation directory).
-Now you have to make Matlab aware that the new files are there. To do so, start Matlab and
-type::
+Obtaining the Sources
+---------------------
 
-    addpath path\to\mpsignfit\files
+If you have *not already downloaded* the sources during the installation of the
+Command Line Interface:
 
-where you replace ``path\to\mpsignifit\files`` with the path where you copied the ``mpsignifit``
-folder. If you now call::
+You will want to download the most recent version of psignifit from:
+`<http://sourceforge.net/.projects/psignifit/files/>`_. You will want the
+``zip`` file, for example ``psignifit3.0_beta_28-10-2011.zip``.
+
+Extract the file, and enter the directory by typing::
+
+    unzip psignifit3.0_beta_<date of the snapshot>.zip
+    cd psignifit3.0_beta_<date of the snapshot>
+
+replacing ``<date of the snapshot>`` by the date string in the file
+name.
+
+Installing the Matlab Version of Psignifit (mspignifit)
+-------------------------------------------------------
+
+Within the extracted directory, there is a directory called ``mpsignifit``. Copy
+this directory to somewhere (e.g. the ``toolbox`` folder in your Matlab
+installation directory).  Then inform Matlab about these files by typing (in
+Matlab)::
+
+    addpath <path\to\mpsignfit\files>
+
+where you replace ``<path\to\mpsignifit\files>`` with the path where you copied
+the ``mpsignifit`` folder.
+
+If you now call::
 
     savepath
 
@@ -26,5 +50,4 @@ you avoid having to call the above command everytime you start Matlab.
 You can check that everything went fine by calling::
 
     test_psignifit
-
 
