@@ -296,7 +296,7 @@ dist-win: build psignifit-cli.iss cli-version
 	mv WindowsInstaller/psignifit-cli_3_beta_installer.exe psignifit-cli_3_beta_installer_$(TODAY).exe
 
 dist-win-python-installer: build
-	if [ $(shell uname) != 'Linux' -a $(shell uname) != 'Darwin' ]; then python setup.py bdist_wininst; fi
+	if [ $(shell uname) != 'Linux' -a $(shell uname) != 'Darwin' ]; then python windows_setup.py bdist_wininst; fi
 
 dist-upload-doc: python-doc
 	scp -r doc-html/* igordertigor,psignifit@web.sourceforge.net:/home/groups/p/ps/psignifit/htdocs/
