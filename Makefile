@@ -120,6 +120,8 @@ clean-python: swignifit-clean
 	-rm -rv build
 	-rm pypsignifit/*.pyc
 	-rm $(PYPSIGNIFIT_VERSION)
+	# when building with the windows_setup.py, a setup.pyc file is created
+	-rm setup.pyc
 
 python-doc: $(DOCFILES) $(PYTHONFILES) python-build
 	mkdir -p $(SPHINX_DOCOUT)/$(EPYDOC_DCOOUT)
