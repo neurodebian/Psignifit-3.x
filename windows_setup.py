@@ -9,21 +9,15 @@
 #
 ######################################################################
 
-""" setup.py for Psignifit 3.x """
+""" Windows specific setup.py for Psignifit 3.x
 
-from distutils.core import setup, Extension
-import numpy
-import os
+Instead of linking to a shared library like in `setup.py`, all of Psi++ is
+compiled into the extension.
 
-# metadata definitions
-name = "pypsignifit"
-version = "3.0beta"
-author = "Ingo Fründ, Valentin Haenel"
-author_email = "psignifit-users@lists.sourceforge.net"
-description = "Statistical inference for psychometric functions"
-url= "http://sourceforge.net/projects/psignifit/"
-license = "MIT"
-packages = ["pypsignifit", "swignifit"]
+"""
+
+# other imports, metadata and extension definition
+from setup import *
 
 # Psi++ source files
 psipp_sources = [
@@ -42,20 +36,10 @@ psipp_sources = [
     "src/prior.cc",
     "src/integrate.cc"]
 
-# swignifit interface
-swignifit_sources = ["swignifit/swignifit_raw.cxx"]
+# swignifit interface, override the definition in `setup.py`
 swignifit = Extension('swignifit._swignifit_raw',
         sources = psipp_sources + swignifit_sources,
         include_dirs=["src"])
-ext_modules = [swignifit]
 
 if __name__ == "__main__":
-    setup(name = name,
-        version = version,
-        author = author,
-        author_email = author_email,
-        description = description,
-        url = url,
-        license = license,
-        packages = packages,
-        ext_modules = ext_modules)
+    main(ext_modules=[swignifit])
