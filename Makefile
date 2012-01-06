@@ -295,7 +295,7 @@ dist-win: build psignifit-cli.iss cli-version
 	wine $(HOME)/.wine/drive_c/Program\ Files/Inno\ Setup\ 5/ISCC.exe psignifit-cli.iss
 	mv WindowsInstaller/psignifit-cli_3_beta_installer.exe psignifit-cli_3_beta_installer_$(TODAY).exe
 
-dist-win-python-installer: build
+dist-win-python-installer: swig
 	if [ $(shell uname) != 'Linux' -a $(shell uname) != 'Darwin' ]; then python windows_setup.py bdist_wininst; fi
 
 dist-upload-doc: python-doc
