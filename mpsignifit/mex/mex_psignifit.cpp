@@ -675,6 +675,23 @@ mxArray *asir ( const mxArray * inp ) {
 }
 
 void mexFunction ( int nhls, mxArray *plhs[], int nrhs, const mxArray *prhs[] ) {
+	/* Allfunctions can be called from this one in the form:
+	 *
+	 * mex_psignifit ( command, parameters )
+	 *
+	 * which will return a struct with the results.
+	 * In the above call, command is the type of inference you want to do -- right now, the following keywords
+	 * are supported:
+	 *
+	 * "bootstrap"
+	 * "mcmc"   (not implementation yet, though!)
+	 * "asir"
+	 * "diagnostic"
+	 * "map"
+	 *
+	 * parameters is a struct with all the parameters that you need included. An example can be found in the
+	 * mkconfig.m file
+	 */
 	char method[20], errormsg[40];
 
 	logmsg ( "Checking input\n" );
