@@ -2,10 +2,6 @@
 * Lion: PATH differs between terminal and matlab
 * Lion: tests faile with explicite stepwidths
 
-* DESTDIR
-* using std::ptrdiff_t -- in swignifit.i  Val
-* library_dirs in setup.py?  Val
-* merge shared_library to master
 * release tags : release/3.0_beta.20111109.1
 * tags signieren mit git tag -s
 * kein doc packet
