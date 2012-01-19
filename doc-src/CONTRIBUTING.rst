@@ -148,23 +148,45 @@ below).
 Commits
 .......
 
-To make it easier to keep track of the development of psignifit, we use the following marks for commits:
-
-* [NF]    new feature
-* [BF]    bug fix
-* [RF]    refactoring
-* [FO]    code formatting (adding spaces etc.)
-* [UT]    unit tests
-* [DOC]   documentation
-
-We may additionally use the following marks to identify what parts of the code
+To make it easier to keep track of the development of psignifit, we use the
+following marks forto identify what parts of the code
 base we worked on:
 
-* C++
-* swig
-* py
-* R
-* build
+:C++:
+    C++ code base
+:swig:
+    swig interface
+:py:
+    Python code
+:R:
+    R code
+:matlab:
+    matlab code
+:build:
+    Build system
+:docs:
+    Documentation
+
+And the following marks  to identify the type of change that was made
+
+:NF:
+    new feature
+:BF:
+    bug fix
+:RF:
+    refactor
+:FO:
+    formatting
+:UT:
+    unit test
+
+Example::
+
+    [build/RF] do proper signed tags with new tag naming structure
+
+Also, If you wish to automate the process of creating such markers, to increase
+consistency, we suggest using the following git-hook:
+https://github.com/esc/commit-marker
 
 Merging
 .......
