@@ -3,7 +3,23 @@
 import numpy as np
 from swignifit.swignifit_raw import vector_double
 
-__doc__ = """This module """
+__doc__ = """This module is intended to perform bayesian model comparison using model posterior probabilities
+
+The rationale is the following:
+Imaginge a number of candidate psychometric function models M1,M2,...Mn. We proceed by treating
+M as another model parameter and perform gibbs sampling in the parameter space of this metamodel.
+The function gibbs model will then give the marginal posterior distribution in model space.
+
+In some applications, we might be interested in fitting more than one psychometric function in each
+of the models to be compared. This is for example relevant if the feature that distinguishes between
+the different models is e prior distribution. In this case, we can have each model consist of a sequence
+of PsiInference objects.
+
+Note that the logic of this module only works for Bayesian inference and *not* for a Bootstrap setting.
+Also be aware that the data that were used for the different models should be the same across M1,M2,...,Mn.
+"""
+
+__all__ = ["gibbs_model"]
 
 def sample_model ( theta, inference_objects ):
     """sample_model ( theta, inference_objects )
@@ -51,7 +67,6 @@ def sample_parameter ( inference_object ):
         return out
     else:
         raise ValueError, "Incorrect input"
-
 
 def gibbs_model ( inference_objects, nsamples=1000, M0=0 ):
     """gibbs_model ( inference_objects, nsamples=1000 )
