@@ -21,7 +21,8 @@ LD_LIBRARY_PATH=src/build
 PYTHON=python
 CLI_SRC=cli
 TODAY=`date +%d-%m-%G`
-LONGTODAY=`date +%G-%m-%d`
+LONGTODAY=`date +%G%m%d`
+RELEASE_TAG=release/3.0_beta.$(LONGTODAY).1
 GIT_DESCRIPTION=`git describe --tags`
 CLI_VERSION_HEADER=cli/cli_version.h
 MPSIGNIFIT_VERSION=mpsignifit/psignifit_version.m
@@ -306,7 +307,7 @@ dist-upload-doc: python-doc
 	git tag doc-$(LONGTODAY)
 	git push origin doc-$(LONGTODAY)
 
-dist-upload-archives: | dist-changelog dist-git-tag-snap dist-swigged dist-win
+dist-upload-archives: | dist-changelog dist-git-tag-release dist-swigged dist-win
 	mkdir psignifit3.0_beta_$(TODAY)
 	cp psignifit3.0_beta_$(TODAY).zip psignifit-cli_3_beta_installer_$(TODAY).exe psignifit3.0_beta_$(TODAY)
 	if [ -d dist ]; then \
@@ -316,9 +317,15 @@ dist-upload-archives: | dist-changelog dist-git-tag-snap dist-swigged dist-win
 	fi
 	scp -rv psignifit3.0_beta_$(TODAY) igordertigor,psignifit@frs.sourceforge.net:/home/frs/project/p/ps/psignifit/
 	#rm -r psignifit3.0_beta_$(TODAY)
-	git push origin snap-$(LONGTODAY)
+	git push origin $(RELEASE_TAG)
 
-dist-git-tag-snap:
-	git tag snap-$(LONGTODAY)
+dist-git-tag-release:
+	if git tag | grep -q $(RELEASE_TAG) ; then \
+		echo "A rare case of tagging twice in a day?"; \
+		echo "The tag "$(RELEASE_TAG)" exists already."; \
+		echo "Currently we do not support this"; \
+		false; \
+	fi
+	git tag -s -m "Psignifit3.x $(RELEASE_TAG)"  $(RELEASE_TAG)
 
 # }}}
