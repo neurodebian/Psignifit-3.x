@@ -2,6 +2,7 @@
 
 import numpy as np
 from swignifit.swignifit_raw import vector_double
+from pypsignifit import psignidata
 
 __doc__ = """This module is intended to perform bayesian model comparison using model posterior probabilities
 
