@@ -127,7 +127,7 @@ clean-python: swignifit-clean
 python-doc: $(DOCFILES) $(PYTHONFILES) python-build
 	mkdir -p $(SPHINX_DOCOUT)/$(EPYDOC_DCOOUT)
 	# epydoc -o $(SPHINX_DOCOUT)/$(EPYDOC_DCOOUT) $(EPYDOC_TARGET)
-	PYTHONPATH=.:doc-src sphinx-build doc-src $(SPHINX_DOCOUT)
+	PYTHONPATH=.:doc-src LD_LIBRARY_PATH=src/build/ sphinx-build doc-src $(SPHINX_DOCOUT)
 
 clean-python-doc:
 	-rm -rv $(SPHINX_DOCOUT)
