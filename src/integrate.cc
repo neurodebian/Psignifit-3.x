@@ -56,6 +56,28 @@ std::vector<double> lingrid ( double xmin, double xmax, unsigned int gridsize ) 
 	return x;
 }
 
+double max_vector ( const std::vector<double>& fx ) {
+	double mx(-1e5);
+	unsigned int i;
+
+	for (i=0; i<fx.size(); i++ ) {
+		if ( fx[i] > mx )
+			mx = fx[i];
+	}
+	return mx;
+}
+
+double min_vector ( const std::vector<double>& fx ) {
+	double mn(1e5);
+	unsigned int i;
+
+	for (i=0; i<fx.size(); i++ ) {
+		if ( fx[i] < mn )
+			mn = fx[i];
+	}
+	return mn;
+}
+
 // Numerical integration ///////////////////////
 
 void normalize_probability ( const std::vector<double>& x, std::vector<double>& fx ) {
