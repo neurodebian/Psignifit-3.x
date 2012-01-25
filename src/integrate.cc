@@ -229,7 +229,7 @@ PsiIndependentPosterior independent_marginals (
 
 	unsigned int nprm ( pmf->getNparams() ), i, j;
 	unsigned int maxntrials ( 0 );
-	double minp,minm,maxm,maxw,s;
+	double minp,minm,maxm,maxw,s,Z,p,m, count;
 	std::vector< std::vector<double> > grids ( nprm );
 	std::vector< std::vector<double> > margin ( nprm, std::vector<double>(gridsize) );
 	std::vector< std::vector<double> > distparams (nprm, std::vector<double>(3) );
@@ -250,10 +250,26 @@ PsiIndependentPosterior independent_marginals (
 
 		for ( j=0; j<nprm; j++ ) { prm[j] = MAP[j]; }
 
+		count = 0;
 		for ( j=0; j<gridsize; j++ ) {
 			prm[i] = grids[i][j];
-			margin[i][j] = exp ( -pmf->neglpost ( prm, data ) );
+			p = pmf->neglpost ( prm, data );
+			// Clip
+			margin[i][j] = (p > -1e10 ? p : -1e10 );
+
+			// And compute average Z online
+			if (p>-1e10 && p<1e10) {
+				Z += ( margin[i][j] );
+				count ++;
+			}
 		}
+		Z /= count;
+
+		// Include Z for numerical stability
+		for ( j=0; j<gridsize; j++ ) {
+			margin[i][j] = exp ( Z - margin[i][j] );
+		}
+
 	}
 
 	for ( i=0; i<nprm; i++ ) {
