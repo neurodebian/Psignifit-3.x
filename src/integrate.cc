@@ -244,6 +244,7 @@ PsiIndependentPosterior independent_marginals (
 	for ( i=0; i<nprm; i++ ) {
 		// Determine parameter ranges using the same routine as for starting values
 		parameter_range ( data, pmf, i, &minm, &maxm );
+		Z = 0;
 		// This routine is slightly more narrow than we would like for our purposes
 		if ( i>1 ) { minm=0; maxm=1.; }
 		if ( i==1 ) { minm=0; maxm*=2; }
@@ -256,8 +257,25 @@ PsiIndependentPosterior independent_marginals (
 		for ( j=0; j<gridsize; j++ ) {
 			prm[i] = grids[i][j];
 			p = pmf->neglpost ( prm, data );
+#ifdef DEBUG_INTEGRATE
+			std::cerr << "p(" << i << "," << j << ") = " << p << " " << prm[i];
+#endif
 			// Clip
-			margin[i][j] = (p > -1e10 ? p : -1e10 );
+			if ( isinf ( p ) ) {
+				if ( j>0 ) {
+					grids[i][j] = grids[i][j-1];
+					margin[i][j] = margin[i][j-1];
+				} else {
+					grids[i][j] = grids[i][j+1];
+					prm[i] = grids[i][j+1];
+					margin[i][j] = pmf->neglpost ( prm, data );
+					if ( isinf ( margin[i][j] ) ) std::cerr << "WARNING: margin("<<i<<","<<j<<") is inf\n";
+				}
+			} else margin[i][j] = (p > -1e10 ? p : -1e10 );
+			if ( isinf ( margin[i][j] ) ) margin[i][j] = 1e20;
+#ifdef DEBUG_INTEGRATE
+			std::cerr << " margin = " << margin[i][j] << "\n";
+#endif
 
 			// And compute average Z online
 			if (p>-1e10 && p<1e10) {
