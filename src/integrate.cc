@@ -82,40 +82,88 @@ double min_vector ( const std::vector<double>& fx ) {
 
 void normalize_probability ( const std::vector<double>& x, std::vector<double>& fx ) {
 	double Z(0);
+	double last_f ( fx[0] ), last_x ( x[0] );
+	double f, d;
 	unsigned int i;
 
-	for ( i=0; i<x.size(); i++ ) {
-		Z += fx[i];
+	for ( i=1; i<x.size(); i++ ) {
+		if ( fx[i]!=fx[i] || isinf ( fx[i] ) ) {
+			continue;
+		}
+		// Trapez Quadradure
+		f = 0.5*(fx[i]+last_f);
+		d = x[i]-last_x;
+		Z += f*d;
+		last_f = fx[i];
+		last_x = x[i];
+#ifdef DEBUG_INTEGRATE
+		std::cerr << "fx["<<i<< "] = " << fx[i] << "\n";
+#endif
 	}
-	Z *= x[1]-x[0];
 
 	for ( i=0; i<x.size(); i++ ) {
 		fx[i] /= Z;
 	}
+
+#ifdef DEBUG_INTEGRATE
+	std::cerr << "Z = " << Z << "\n";
+#endif
 }
 
 double numerical_mean ( const std::vector<double>& x, const std::vector<double>& fx ) {
 	double m (0.);
+	double last_f(fx[0]),last_x(x[0]);
+	double f,d;
 	unsigned int i;
 
-	for ( i=0; i<x.size(); i++ ) {
-		// Gaussian Quadrature
-		m += x[i]*fx[i];
+#ifdef DEBUG_INTEGRATE
+	std::cerr << last_f << "," << last_x << "\n";
+#endif
+
+	for ( i=1; i<x.size(); i++ ) {
+		// Trapez Quadrature
+		if ( fx[i] != fx[i] || isinf ( fx[i] ) ) {
+			continue;
+		}
+		// f = 0.25*(x[i]+last_x)*(fx[i]+last_f);
+		f = 0.5*(fx[i]*x[i] + last_f);
+		d = x[i]-last_x;
+		m += f*d;
+		last_x = x[i];
+		last_f = fx[i]*x[i];
 	}
-	m *= x[1]-x[0];
+
+#ifdef DEBUG_INTEGRATE
+	std::cerr << "E(X) = " << m << "\n";
+#endif
 
 	return m;
 }
 
 double numerical_variance ( const std::vector<double>& x, const std::vector<double>& fx, double m ) {
 	double v (0.);
+	double last_f(fx[0]),last_x(x[0]);
+	double mx,mf,d,f;
 	unsigned int i;
 
 	for ( i=0; i<x.size(); i++ ) {
-		// Gaussian Quadrature
-		v += (x[i]-m)*(x[i]-m)*fx[i];
+		// Trapze Quadrature
+		if ( fx[i] != fx[i] || isinf ( fx[i] ) )
+			continue;
+		// mx = 0.5*(x[i]+last_x);
+		// mf = 0.5*(fx[i]+last_f);
+		f = (x[i]-m);
+		f *= f;
+		f *= fx[i];
+		d  = x[i] - last_x;
+		v += f*d;
+		last_f = f;
+		last_x = x[i];
 	}
-	v *= x[1]-x[0];
+
+#ifdef DEBUG_INTEGRATE
+	std::cerr << "V(X) = " << v << "\n";
+#endif
 
 	return v;
 }
