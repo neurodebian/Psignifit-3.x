@@ -310,7 +310,7 @@ MCMCList sample_posterior (
 	unsigned int nprm ( pmf->getNparams() ), i, j, k;
 	unsigned int nproposals ( nsamples*propose );
 	MCMCList finalsamples ( nsamples, nprm, data->getNblocks() );
-	double q,p;
+	double q,p,q_raw,p_raw;
 	double nduplicate ( 0 );
 	PsiRandom rng;
 	PsiPrior * posteri;
@@ -322,8 +322,9 @@ MCMCList sample_posterior (
 	std::vector<double> cum_probs ( nproposals );
 	std::vector<double> rnumbers ( nsamples );
 
-	for ( j=0; j<nprm; j++ )
+	for ( j=0; j<nprm; j++ ) {
 		posteriors[j] = post.get_posterior (j);
+	}
 
 	for ( i=0; i<nproposals; i++ ) {
 		// Propose
@@ -333,17 +334,36 @@ MCMCList sample_posterior (
 		q = 1.;
         for ( j=0; j<nprm; j++ ) {
 			posteri = post.get_posterior(j);
-            q *= posteri->pdf ( proposed[i][j] );
+			q_raw = posteri->pdf ( proposed[i][j] );
+			if ( q_raw > 1e10 )
+				q_raw = 1e10;
+			if ( q_raw != q_raw )
+				q_raw = 1e5;
+			if ( q_raw<1e-5 )
+				q_raw = 1e-5;
+            q *= q_raw;
 			delete posteri;
 		}
-        p = exp ( - pmf->neglpost ( proposed[i], data ) );
-        weights[i] = p/q;
+        p = - pmf->neglpost ( proposed[i], data );
+        weights[i] = exp ( p - log (q) );
+#ifdef DEBUG_INTEGRATE
+		if ( weights[i] != weights[i] || weights[i] > 1e10) {
+			std::cerr << "Index: " << i << ", weight: " << weights[i] << ", p: " << p << ", q: " << q << ", th: (" << proposed[i][0];
+			for ( j=1; j<nprm; j++ ) std::cerr << ", " << proposed[i][j];
+			std::cerr << ")\n";
+			std::cerr.flush();
+		}
+#endif
 
-		// Sort make a cumulative distribution vector for the weights
+		// make a cumulative distribution vector for the weights
 		if (i>0)
 			cum_probs[i] = cum_probs[i-1] + weights[i];
-		else
+		else {
 			cum_probs[0] = weights[0];
+#ifdef DEBUG_INTEGRATE
+			std::cerr << "w0 = " << weights[0] << "\n";
+#endif
+		}
 	}
 
 	for ( i=0; i<nsamples; i++ ) {
