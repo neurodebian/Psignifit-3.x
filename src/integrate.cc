@@ -371,10 +371,18 @@ MCMCList sample_posterior (
 		rnumbers[i] = rng.rngcall();
 	}
 
+	// Normalize the cumulative distribution
 	for ( i=0; i<nproposals; i++ )
 		cum_probs[i] /= cum_probs[nproposals-1];
 
-	H = - cum_probs[0] * log(cum_probs[0]);
+	// Calculate entropy for diagnosis
+	if ( cum_probs[0] > 0 )
+		H = - cum_probs[0] * log(cum_probs[0]);
+	else
+		H = 0;
+#ifdef DEBUG_INTEGRATE
+	std::cerr << "H=" << H << ", cum_probs[0] = " << cum_probs[0] << "\n";
+#endif
 	N = 1.;
 	// Avoid zeros
 	for ( i=0; i<nproposals-1; i++ ) {
@@ -382,9 +390,17 @@ MCMCList sample_posterior (
 			H -= (cum_probs[i+1]-cum_probs[i]) * log ( cum_probs[i+1]-cum_probs[i] );
 			N += 1;
 		}
+#ifdef DEBUG_INTEGRATE
+		if ( H!=H ) {
+			std::cerr << "H became nan in the " << i << "th iteration, cum_probs["<<i+1<<"] = " << cum_probs[i+1] << ", cum_probs["<<i<<"] = " << cum_probs[i] <<"\n";
+			break;
+		}
+#endif
 	}
 	H /= log(N);
+#ifdef DEBUG_INTEGRATE
 	std::cerr << "H = " << H << "\n";
+#endif
 
 	sort ( rnumbers.begin(), rnumbers.end() );
 
