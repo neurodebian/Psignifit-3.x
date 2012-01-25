@@ -200,11 +200,21 @@ std::vector<double> match_beta ( const std::vector<double>& x, const std::vector
 	std::vector<double> out (3);
 	double al, bt;
 
-	al = m*((1-m)*m/v -1 );
-	bt = al/m - al;
+	al = m*m*(1-m)/v - m;
+	bt = m*(1-m)*(1-m)/v - (1-m);
+	// al = -m + m*m/v - m*m*m/v;
+	// bt = (al-m*al)/m;
+
+	// al = eta/(eta2*eta2*eta2*v) - 1./eta2;
+	// al = m*((1-m)*m/v -1 );
+	// bt = al/m - al;
 
 	out[0] = al;
 	out[1] = bt;
+	
+#ifdef DEBUG_INTEGRATE
+	std::cerr << "Matched Beta ( " << al << ", " << bt << " ), m = " << m << ", v = " << v << "\n";
+#endif
 
 	return out;
 }
