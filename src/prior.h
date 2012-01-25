@@ -129,8 +129,8 @@ class BetaPrior : public PsiPrior
                                                  normalization(original.normalization),
                                                  rng(original.rng),
                                                  mode(original.mode) {} ///< copy constructor
-		double pdf ( double x ) const { return (x<0||x>1 ? 0 : pow(x,alpha-1)*pow(1-x,beta-1)/normalization); }             ///< return beta pdf
-		double dpdf ( double x ) { return (x<0||x>1 ? 0 : ((alpha-1)*pow(x,alpha-2)*pow(1-x,beta-1) + (beta-1)*pow(1-x,beta-2)*pow(x,alpha-1))/normalization); }      ///< return derivative of beta pdf
+		double pdf ( double x ) const { return (x<1e-15||x>1.-1e-15 ? 0 : pow(x,alpha-1)*pow(1-x,beta-1)/normalization); }             ///< return beta pdf
+		double dpdf ( double x ) { return (x<1e-15||x>1.-1e-15 ? 0 : ((alpha-1)*pow(x,alpha-2)*pow(1-x,beta-1) + (beta-1)*pow(1-x,beta-2)*pow(x,alpha-1))/normalization); }      ///< return derivative of beta pdf
 		double rand ( void ) {return rng.draw();};                                                                                         ///< draw a random number using rejection sampling
         PsiPrior * clone ( void ) const { return new BetaPrior(*this); }
 		double mean ( void ) const { return alpha/(alpha+beta); }
@@ -164,8 +164,8 @@ class GammaPrior : public PsiPrior
                                                     theta(original.theta),
                                                     normalization(original.normalization),
                                                     rng(original.rng) {} ///< copy constructor
-		virtual double pdf ( double x ) const { return (x>0 ? pow(x,k-1)*exp(-x/theta)/normalization : 0 );}                                                             ///< return pdf at position x
-		virtual double dpdf ( double x ) { return (x>0 ? ( (k-1)*pow(x,k-2)*exp(-x/theta)-pow(x,k-1)*exp(-x/theta)/theta)/normalization : 0 ); }                   ///< return derivative of pdf
+		virtual double pdf ( double x ) const { return (x>1e-15 ? pow(x,k-1)*exp(-x/theta)/normalization : 0 );}                                                             ///< return pdf at position x
+		virtual double dpdf ( double x ) { return (x>1e-15 ? ( (k-1)*pow(x,k-2)*exp(-x/theta)-pow(x,k-1)*exp(-x/theta)/theta)/normalization : 0 ); }                   ///< return derivative of pdf
 		virtual double rand ( void ) {return rng.draw(); };
         PsiPrior * clone ( void ) const { return new GammaPrior(*this); }
 		virtual double mean ( void ) const { return k*theta; }
