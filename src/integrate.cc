@@ -7,22 +7,32 @@ PsiIndependentPosterior::PsiIndependentPosterior ( unsigned int nprm,
 				std::vector< std::vector<double> > x,
 				std::vector< std::vector<double> > fx
 				) : nparams (nprm), fitted_posteriors ( posteriors ), grids ( x ), margins ( fx ) {
-	unsigned int i,j;
+	unsigned int i,j,k;
+	double p;
 	std::vector<double> w;
 	Matrix M ( grids[0].size(), 2 );
 
 	for ( i=0; i<nparams; i++ ) {
 		for ( j=0; j<grids[i].size(); j++ ) {
 			M(j,0) = margins[i][j];
-			M(j,1) = posteriors[i]->pdf ( grids[i][j] );
+			p = posteriors[i]->pdf ( grids[i][j] );
+			k = 1;
+			while ( isinf ( p ) ) {
+				p = posteriors[i]->pdf ( grids[i][j+k] );
+				k++;
+				if ( j+k>= grids[i].size() ) p = 1e40;
+			}
+			if ( p!=p ) p=0;
+			M(j,1) = p;
 			// fitted_posteriors[i] = posteriors[i]->clone();
 		}
-		w = leastsq ( &M );
+		w = leastsq ( &M ); // Fit the determined margin using the analytical posterior (is this needed?)
 #ifdef DEBUG_INTEGRATE
 		std::cerr << "w = " << w[0] << "\n";
 #endif
-		for ( j=0; j<margins[i].size(); j++ )
-			margins[i][j] *= w[0];
+		if ( w[0]==w[0] )
+			for ( j=0; j<margins[i].size(); j++ )
+				margins[i][j] *= w[0];
 	}
 }
 
