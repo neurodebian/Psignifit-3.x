@@ -2,6 +2,8 @@
 #include "errors.h"
 #include "linalg.h"
 
+// #define DEBUG_INTEGRATE
+
 PsiIndependentPosterior::PsiIndependentPosterior ( unsigned int nprm,
 				std::vector<PsiPrior*> posteriors,
 				std::vector< std::vector<double> > x,
