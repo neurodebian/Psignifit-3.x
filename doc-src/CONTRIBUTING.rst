@@ -2,16 +2,16 @@
 Contributing to Psignifit 3.0
 =============================
 
-psignifit 3.0 is free software. You are free to modify the software under the terms of the license
-that is distributed with psignifit 3.0. We welcome developers that want to contribute to psignifit 3.0.
+Psignifit 3.0 is free software. You are free to modify the software under the terms of the license
+that is distributed with Psignifit 3.0. We welcome developers that want to contribute to Psignifit 3.0.
 
 Software Architecture
 ---------------------
 
-The psignifit 3.x code base is logically split into several components:
+The Psignifit 3.x code base is logically split into several components:
 
 :psi++:
-    The C++ *engine* of psignifit.
+    The C++ *engine* of Psignifit.
 :pypsignifit:
     High level Python interface, including visualisation methods.
 :swignifit:
@@ -31,6 +31,8 @@ The following UML inspired diagram shows the individual components of Psignifit 
 .. image:: architecture.png
     :alt: Software Architecture
     :scale: 75 %
+
+
 
 Dependencies
 ------------
@@ -148,7 +150,7 @@ below).
 Commits
 .......
 
-To make it easier to keep track of the development of psignifit, we use the
+To make it easier to keep track of the development of Psignifit, we use the
 following marks forto identify what parts of the code
 base we worked on:
 
