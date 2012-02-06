@@ -32,7 +32,22 @@ The following UML inspired diagram shows the individual components of Psignifit 
     :alt: Software Architecture
     :scale: 75 %
 
+The diagram shows all components and how they are connected. The high-level
+interfaces ``pypsignifit``, ``mpsignifit`` all eventually access
+the ``psi++`` engine via an layer. Depending on the interface language, the
+layer may be either ``swignifit`` or ``cli``.
 
+In Linux, building the software begins with compiling the ``psi++`` headers and
+sources into a shared library ``libpsipp.so``. Then ``swignifit`` is compiled
+in two steps. First the swig tool translates the swig definition file
+``swignifit_raw.i`` into the ``swignifit_raw.py`` and ``swignifit_raw.cxx``.
+Then, the shared library ``_swignifit_raw.so`` is compiled and linked with
+``libpsipp.so``. When accessing the engine from Python, the high-level
+``pypsignifit`` calls one of the Python files in swignifit
+``interface_methods.py`` or ``swignifit_raw.py``, which in turn call
+``_swignifit_raw.so``, which in turn calls ``libpsipp.so``. For Matlab The
+situation is similar, but instead of ``swignifit`` the ``cli`` handles calling
+the engine.
 
 Dependencies
 ------------
