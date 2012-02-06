@@ -209,7 +209,7 @@ installation simply type::
 
 You can then run:
 
->>> import pypsignifit
+>>> import pypsignifit as psi
 
 from the source directory. Furthermore you can use the environment variable
 ``PYTHONPATH`` in case you need to bring source directory into scope elsewhere
