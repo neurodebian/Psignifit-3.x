@@ -21,16 +21,21 @@ You will want to download the most recent version of psignifit from::
 
 `Psignifit3 Downloads <http://sourceforge.net/.projects/psignifit/files/>`_
 
+You will want to download the most recent version of psignifit from:
+`<http://sourceforge.net/.projects/psignifit/files/>`_. You will want the
+``zip`` file, for example ``psignifit_3.0_beta.20120207.1.zip``.
 
-Extract the file by typing::
+Extract the file, and enter the directory by typing::
 
-    unzip psignifit3.0_beta_<date of the snapshot>.zip
-    cd psignifit3.0_beta_<date of the snapshot>
+    unzip psignifit_3.0_beta.<date of the snapshot>.1.zip
+    cd psignifit_3.0_beta.<date of the snapshot>.1
 
-where you replace <date of the snapshot> by the date string in the file name. Now simply run::
+replacing ``<date of the snapshot>`` by the date string in the file
+name.
 
-    python setup.py install
+Now simply run::
 
+    make install
 
 Installing the command line interface (optional)
 ------------------------------------------------

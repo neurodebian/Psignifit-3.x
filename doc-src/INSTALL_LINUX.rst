@@ -27,12 +27,12 @@ Obtaining the Sources
 
 You will want to download the most recent version of psignifit from:
 `<http://sourceforge.net/.projects/psignifit/files/>`_. You will want the
-``zip`` file, for example ``psignifit3.0_beta_28-10-2011.zip``.
+``zip`` file, for example ``psignifit_3.0_beta.20120207.1.zip``.
 
 Extract the file, and enter the directory by typing::
 
-    unzip psignifit3.0_beta_<date of the snapshot>.zip
-    cd psignifit3.0_beta_<date of the snapshot>
+    unzip psignifit_3.0_beta.<date of the snapshot>.1.zip
+    cd psignifit_3.0_beta.<date of the snapshot>.1
 
 replacing ``<date of the snapshot>`` by the date string in the file
 name.
@@ -118,7 +118,7 @@ Open a Python interpreter and type::
     import pypsignifit
     pypsignifit.version
 
-If you can see a version string, such as ``snap-2011-10-28-31-g9288222`` you
+If you can see a version string, such as ``snap-2011-10-28-59-gda5adc6`` you
 installation was probably successful.
 
 Installing the Command Line Interface (cli)
