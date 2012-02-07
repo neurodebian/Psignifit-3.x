@@ -17,10 +17,6 @@ you have to download gcc through the Apple Developer Tools. Register for a  deve
 
 For OSX Lion Xcode 4 is free, too. Further information can be found `here <http://jessenoller.com/2011/07/30/quick-pythondeveloper-tips-for-osx-lion/>`.
 
-You will want to download the most recent version of psignifit from::
-
-`Psignifit3 Downloads <http://sourceforge.net/.projects/psignifit/files/>`_
-
 You will want to download the most recent version of psignifit from:
 `<http://sourceforge.net/.projects/psignifit/files/>`_. You will want the
 ``zip`` file, for example ``psignifit_3.0_beta.20120207.1.zip``.
