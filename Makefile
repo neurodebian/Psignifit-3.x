@@ -314,7 +314,7 @@ dist-upload-doc: python-doc
 	git tag doc-$(LONGTODAY)
 	git push origin doc-$(LONGTODAY)
 
-dist-upload-archives: | dist-changelog dist-git-tag-release dist-swigged dist-win
+dist-prepare-upload: dist-swigged dist-win
 	mkdir ${ARCHIVE_PREFIX}
 	cp ${TAR_FILE} ${WINDOWS_CLI_INSTALLER} ${ARCHIVE_PREFIX}
 	if [ -d dist ]; then \
@@ -322,6 +322,8 @@ dist-upload-archives: | dist-changelog dist-git-tag-release dist-swigged dist-wi
 	else \
 		echo "Installer for Python w32 has not been built; will be omitted in Upload."; \
 	fi
+
+dist-upload-archives: | dist-changelog dist-git-tag-release dist-prepare-upload
 	# this upload will only work with Ingo's account
 	scp -rv ${ARCHIVE_PREFIX} igordertigor,psignifit@frs.sourceforge.net:/home/frs/project/p/ps/psignifit/
 	#rm -r psignifit3.0_beta_$(TODAY)
