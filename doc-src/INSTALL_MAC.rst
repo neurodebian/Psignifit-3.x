@@ -33,6 +33,14 @@ Now simply run::
 
     make install
 
+Open a Python interpreter and type::
+
+    import pypsignifit
+    pypsignifit.version
+
+If you can see a version string, such as ``snap-2011-10-28-59-gda5adc6`` you
+installation was probably successful.
+
 Installing the command line interface (optional)
 ------------------------------------------------
 
@@ -66,14 +74,3 @@ Now, you should be able to call::
     psignifit-mapestimate -h
 
 And see some usage messages after each call.
-
-
-Testing your installation
--------------------------
-
-To check whether your installation has been successful and pypsignifit is working properly, you can call::
-
-    make test
-
-This will call the standard test suite for psignifit.
-
