@@ -305,10 +305,10 @@ dist-win-python-installer: swig
 	python windows_setup.py bdist_wininst
 
 dist-upload-doc: python-doc
+	# this upload will only work with Ingo's account
 	scp -r doc-html/* igordertigor,psignifit@web.sourceforge.net:/home/groups/p/ps/psignifit/htdocs/
 	git tag doc-$(LONGTODAY)
 	git push origin doc-$(LONGTODAY)
-
 dist-upload-archives: | dist-changelog dist-git-tag-release dist-swigged dist-win
 	mkdir psignifit3.0_beta_$(TODAY)
 	cp psignifit3.0_beta_$(TODAY).zip psignifit-cli_3_beta_installer_$(TODAY).exe psignifit3.0_beta_$(TODAY)
