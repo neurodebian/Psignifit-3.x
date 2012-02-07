@@ -23,6 +23,8 @@ CLI_SRC=cli
 TODAY=`date +%d-%m-%G`
 LONGTODAY=`date +%G%m%d`
 RELEASE_TAG=release/3.0_beta.$(LONGTODAY).1
+FILENAME_PREFIX=3.0_beta.$(LONGTODAY).1
+TAR_FILE=psignifit_${FILENAME_PREFIX}.tar
 GIT_DESCRIPTION=`git describe --tags`
 CLI_VERSION_HEADER=cli/cli_version.h
 MPSIGNIFIT_VERSION=mpsignifit/psignifit_version.m
@@ -282,9 +284,9 @@ dist-changelog:
 	fi
 
 dist-tar: python-version cli-version mpsignifit-version
-	git archive --format=tar --prefix=psignifit3.0_beta_$(TODAY)/ master > psignifit3.0_beta_$(TODAY).tar
-	tar --transform "s,^,psignifit3.0_beta_$(TODAY)/," -rf psignifit3.0_beta_$(TODAY).tar $(PYPSIGNIFIT_VERSION) $(CLI_VERSION_HEADER) $(MPSIGNIFIT_VERSION)
-	gzip psignifit3.0_beta_$(TODAY).tar
+	git archive --format=tar --prefix=psignifit_${FILENAME_PREFIX}/ master > ${TAR_FILE}
+	tar --transform "s,^,psignifit_${FILENAME_PREFIX}/," -rf ${TAR_FILE} $(PYPSIGNIFIT_VERSION) $(CLI_VERSION_HEADER) $(MPSIGNIFIT_VERSION)
+	gzip ${TAR_FILE}
 
 dist-swigged: dist-tar swig
 	tar xzf psignifit3.0_beta_$(TODAY).tar.gz
