@@ -27,6 +27,8 @@ FILENAME_PREFIX=3.0_beta.$(LONGTODAY).1
 ARCHIVE_PREFIX=psignifit_${FILENAME_PREFIX}/
 TAR_FILE=psignifit_${FILENAME_PREFIX}.tar
 ZIP_FILE=psignifit_${FILENAME_PREFIX}.zip
+WINDOWS_CLI_INSTALLER=psignifit_${FILENAME_PREFIX}_installer.exe
+WINDOWS_PY_INSTALLER=psignifit_${FILENAME_PREFIX}_win32-py2.6.exe
 GIT_DESCRIPTION=`git describe --tags`
 CLI_VERSION_HEADER=cli/cli_version.h
 MPSIGNIFIT_VERSION=mpsignifit/psignifit_version.m
@@ -300,7 +302,7 @@ dist-win: build psignifit-cli.iss cli-version
 	if [ -d WindowsInstaller ]; then rm -r WindowsInstaller; fi
 	cd cli && make clean && make -f MakefileMinGW
 	wine $(HOME)/.wine/drive_c/Program\ Files/Inno\ Setup\ 5/ISCC.exe psignifit-cli.iss
-	mv WindowsInstaller/psignifit-cli_3_beta_installer.exe psignifit-cli_3_beta_installer_$(TODAY).exe
+	mv WindowsInstaller/psignifit-cli_3_beta_installer.exe ${WINDOWS_CLI_INSTALLER}
 
 dist-win-python-installer: swig
 	# Execute on Windows only!
@@ -311,15 +313,17 @@ dist-upload-doc: python-doc
 	scp -r doc-html/* igordertigor,psignifit@web.sourceforge.net:/home/groups/p/ps/psignifit/htdocs/
 	git tag doc-$(LONGTODAY)
 	git push origin doc-$(LONGTODAY)
+
 dist-upload-archives: | dist-changelog dist-git-tag-release dist-swigged dist-win
-	mkdir psignifit3.0_beta_$(TODAY)
-	cp psignifit3.0_beta_$(TODAY).zip psignifit-cli_3_beta_installer_$(TODAY).exe psignifit3.0_beta_$(TODAY)
+	mkdir ${ARCHIVE_PREFIX}
+	cp ${TAR_FILE} ${WINDOWS_CLI_INSTALLER} ${ARCHIVE_PREFIX}
 	if [ -d dist ]; then \
-		cp dist/pypsignifit-3.0beta.win32-py2.6.exe psignifit3.0_beta_$(TODAY)/psignifit3.0_beta_$(TODAY)_win32-py2.6.exe; \
+		cp dist/pypsignifit-3.0beta.win32-py2.6.exe ${ARCHIVE_PREFIX}/${WINDOWS_PY_INSTALLER}; \
 	else \
 		echo "Installer for Python w32 has not been built; will be omitted in Upload."; \
 	fi
-	scp -rv psignifit3.0_beta_$(TODAY) igordertigor,psignifit@frs.sourceforge.net:/home/frs/project/p/ps/psignifit/
+	# this upload will only work with Ingo's account
+	scp -rv ${ARCHIVE_PREFIX} igordertigor,psignifit@frs.sourceforge.net:/home/frs/project/p/ps/psignifit/
 	#rm -r psignifit3.0_beta_$(TODAY)
 	git push origin $(RELEASE_TAG)
 
