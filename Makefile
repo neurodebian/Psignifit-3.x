@@ -24,7 +24,9 @@ TODAY=`date +%d-%m-%G`
 LONGTODAY=`date +%G%m%d`
 RELEASE_TAG=release/3.0_beta.$(LONGTODAY).1
 FILENAME_PREFIX=3.0_beta.$(LONGTODAY).1
+ARCHIVE_PREFIX=psignifit_${FILENAME_PREFIX}/
 TAR_FILE=psignifit_${FILENAME_PREFIX}.tar
+ZIP_FILE=psignifit_${FILENAME_PREFIX}.zip
 GIT_DESCRIPTION=`git describe --tags`
 CLI_VERSION_HEADER=cli/cli_version.h
 MPSIGNIFIT_VERSION=mpsignifit/psignifit_version.m
@@ -284,15 +286,15 @@ dist-changelog:
 	fi
 
 dist-tar: python-version cli-version mpsignifit-version
-	git archive --format=tar --prefix=psignifit_${FILENAME_PREFIX}/ master > ${TAR_FILE}
-	tar --transform "s,^,psignifit_${FILENAME_PREFIX}/," -rf ${TAR_FILE} $(PYPSIGNIFIT_VERSION) $(CLI_VERSION_HEADER) $(MPSIGNIFIT_VERSION)
+	git archive --format=tar --prefix=${ARCHIVE_PREFIX} master > ${TAR_FILE}
+	tar --transform "s,^,${ARCHIVE_PREFIX}," -rf ${TAR_FILE} $(PYPSIGNIFIT_VERSION) $(CLI_VERSION_HEADER) $(MPSIGNIFIT_VERSION)
 	gzip ${TAR_FILE}
 
 dist-swigged: dist-tar swig
-	tar xzf psignifit3.0_beta_$(TODAY).tar.gz
-	cp swignifit/swignifit_raw.cxx swignifit/swignifit_raw.py psignifit3.0_beta_$(TODAY)/swignifit/
-	zip -r psignifit3.0_beta_$(TODAY).zip psignifit3.0_beta_$(TODAY)
-	rm -r psignifit3.0_beta_$(TODAY)
+	tar xzf ${TAR_FILE}.gz
+	cp swignifit/swignifit_raw.cxx swignifit/swignifit_raw.py ${ARCHIVE_PREFIX}swignifit/
+	zip -r ${ZIP_FILE} ${ARCHIVE_PREFIX}
+	rm -r ${ARCHIVE_PREFIX}
 
 dist-win: build psignifit-cli.iss cli-version
 	if [ -d WindowsInstaller ]; then rm -r WindowsInstaller; fi
