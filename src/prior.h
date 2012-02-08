@@ -225,7 +225,7 @@ class invGammaPrior : public PsiPrior
 					beta(original.beta),
 					normalization ( original.normalization ),
 					rng(original.rng) {} ///< copy constructor
-		virtual double pdf ( double x ) { return ( x>0 ? pow ( x, -alpha-1 ) * exp ( -beta/x ) * normalization : 0 ); }
+		virtual double pdf ( double x ) const { return ( x>0 ? pow ( x, -alpha-1 ) * exp ( -beta/x ) * normalization : 0 ); }
 		virtual double dpdf ( double x ) { return (x>0 ? ( (-alpha-1)*pow(x,-alpha-2) * exp ( -beta/x ) + pow(x,-alpha-1) * exp ( -beta/x ) * beta / (x*x) ) * normalization : 0 ); }
 		virtual double rand ( void ) { return 1./rng.draw(); }
 		PsiPrior * clone ( void ) const { return new invGammaPrior(*this); }
@@ -250,7 +250,7 @@ class ninvGammaPrior : public invGammaPrior
 	public:
 		ninvGammaPrior ( double shape, double scale ) : invGammaPrior ( shape, scale ) {}
 		ninvGammaPrior ( const ninvGammaPrior& original ) : invGammaPrior ( original ) {}
-		double pdf ( double x ) { return invGammaPrior::pdf ( -x ); }
+		double pdf ( double x ) const { return invGammaPrior::pdf ( -x ); }
 		double dpdf ( double x ) { return -invGammaPrior::dpdf ( -x ); }
 		double rand ( void ) { return -invGammaPrior::rand(); }
 		PsiPrior * clone ( void ) const { return new ninvGammaPrior ( *this ); }
