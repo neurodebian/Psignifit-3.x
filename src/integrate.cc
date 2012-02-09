@@ -2,27 +2,39 @@
 #include "errors.h"
 #include "linalg.h"
 
+// #define DEBUG_INTEGRATE
+
 PsiIndependentPosterior::PsiIndependentPosterior ( unsigned int nprm,
 				std::vector<PsiPrior*> posteriors,
 				std::vector< std::vector<double> > x,
 				std::vector< std::vector<double> > fx
 				) : nparams (nprm), fitted_posteriors ( posteriors ), grids ( x ), margins ( fx ) {
-	unsigned int i,j;
+	unsigned int i,j,k;
+	double p;
 	std::vector<double> w;
 	Matrix M ( grids[0].size(), 2 );
 
 	for ( i=0; i<nparams; i++ ) {
 		for ( j=0; j<grids[i].size(); j++ ) {
 			M(j,0) = margins[i][j];
-			M(j,1) = posteriors[i]->pdf ( grids[i][j] );
+			p = posteriors[i]->pdf ( grids[i][j] );
+			k = 1;
+			while ( isinf ( p ) ) {
+				p = posteriors[i]->pdf ( grids[i][j+k] );
+				k++;
+				if ( j+k>= grids[i].size() ) p = 1e40;
+			}
+			if ( p!=p ) p=0;
+			M(j,1) = p;
 			// fitted_posteriors[i] = posteriors[i]->clone();
 		}
-		w = leastsq ( &M );
+		w = leastsq ( &M ); // Fit the determined margin using the analytical posterior (is this needed?)
 #ifdef DEBUG_INTEGRATE
 		std::cerr << "w = " << w[0] << "\n";
 #endif
-		for ( j=0; j<margins[i].size(); j++ )
-			margins[i][j] *= w[0];
+		if ( w[0]==w[0] )
+			for ( j=0; j<margins[i].size(); j++ )
+				margins[i][j] *= w[0];
 	}
 }
 
@@ -46,44 +58,114 @@ std::vector<double> lingrid ( double xmin, double xmax, unsigned int gridsize ) 
 	return x;
 }
 
+double max_vector ( const std::vector<double>& fx ) {
+	double mx(-1e5);
+	unsigned int i;
+
+	for (i=0; i<fx.size(); i++ ) {
+		if ( fx[i] > mx )
+			mx = fx[i];
+	}
+	return mx;
+}
+
+double min_vector ( const std::vector<double>& fx ) {
+	double mn(1e5);
+	unsigned int i;
+
+	for (i=0; i<fx.size(); i++ ) {
+		if ( fx[i] < mn )
+			mn = fx[i];
+	}
+	return mn;
+}
+
 // Numerical integration ///////////////////////
 
 void normalize_probability ( const std::vector<double>& x, std::vector<double>& fx ) {
 	double Z(0);
+	double last_f ( fx[0] ), last_x ( x[0] );
+	double f, d;
 	unsigned int i;
 
-	for ( i=0; i<x.size(); i++ ) {
-		Z += fx[i];
+	for ( i=1; i<x.size(); i++ ) {
+		if ( fx[i]!=fx[i] || isinf ( fx[i] ) ) {
+			continue;
+		}
+		// Trapez Quadradure
+		f = 0.5*(fx[i]+last_f);
+		d = x[i]-last_x;
+		Z += f*d;
+		last_f = fx[i];
+		last_x = x[i];
+#ifdef DEBUG_INTEGRATE
+		std::cerr << "fx["<<i<< "] = " << fx[i] << "\n";
+#endif
 	}
-	Z *= x[1]-x[0];
 
 	for ( i=0; i<x.size(); i++ ) {
 		fx[i] /= Z;
 	}
+
+#ifdef DEBUG_INTEGRATE
+	std::cerr << "Z = " << Z << "\n";
+#endif
 }
 
 double numerical_mean ( const std::vector<double>& x, const std::vector<double>& fx ) {
 	double m (0.);
+	double last_f(fx[0]),last_x(x[0]);
+	double f,d;
 	unsigned int i;
 
-	for ( i=0; i<x.size(); i++ ) {
-		// Gaussian Quadrature
-		m += x[i]*fx[i];
+#ifdef DEBUG_INTEGRATE
+	std::cerr << last_f << "," << last_x << "\n";
+#endif
+
+	for ( i=1; i<x.size(); i++ ) {
+		// Trapez Quadrature
+		if ( fx[i] != fx[i] || isinf ( fx[i] ) ) {
+			continue;
+		}
+		// f = 0.25*(x[i]+last_x)*(fx[i]+last_f);
+		f = 0.5*(fx[i]*x[i] + last_f);
+		d = x[i]-last_x;
+		m += f*d;
+		last_x = x[i];
+		last_f = fx[i]*x[i];
 	}
-	m *= x[1]-x[0];
+
+#ifdef DEBUG_INTEGRATE
+	std::cerr << "E(X) = " << m << "\n";
+#endif
 
 	return m;
 }
 
 double numerical_variance ( const std::vector<double>& x, const std::vector<double>& fx, double m ) {
 	double v (0.);
+	double last_f(fx[0]),last_x(x[0]);
+	double mx,mf,d,f;
 	unsigned int i;
 
 	for ( i=0; i<x.size(); i++ ) {
-		// Gaussian Quadrature
-		v += (x[i]-m)*(x[i]-m)*fx[i];
+		// Trapze Quadrature
+		if ( fx[i] != fx[i] || isinf ( fx[i] ) )
+			continue;
+		// mx = 0.5*(x[i]+last_x);
+		// mf = 0.5*(fx[i]+last_f);
+		f = (x[i]-m);
+		f *= f;
+		f *= fx[i];
+		d  = x[i] - last_x;
+		v += f*d;
+		last_f = f;
+		last_x = x[i];
 	}
-	v *= x[1]-x[0];
+
+#ifdef DEBUG_INTEGRATE
+	std::cerr << "V(X) = " << v << "\n";
+#endif
 
 	return v;
 }
@@ -120,11 +202,21 @@ std::vector<double> match_beta ( const std::vector<double>& x, const std::vector
 	std::vector<double> out (3);
 	double al, bt;
 
-	al = m*((1-m)*m/v -1 );
-	bt = al/m - al;
+	al = m*m*(1-m)/v - m;
+	bt = m*(1-m)*(1-m)/v - (1-m);
+	// al = -m + m*m/v - m*m*m/v;
+	// bt = (al-m*al)/m;
+
+	// al = eta/(eta2*eta2*eta2*v) - 1./eta2;
+	// al = m*((1-m)*m/v -1 );
+	// bt = al/m - al;
 
 	out[0] = al;
 	out[1] = bt;
+	
+#ifdef DEBUG_INTEGRATE
+	std::cerr << "Matched Beta ( " << al << ", " << bt << " ), m = " << m << ", v = " << v << "\n";
+#endif
 
 	return out;
 }
@@ -139,7 +231,7 @@ PsiIndependentPosterior independent_marginals (
 
 	unsigned int nprm ( pmf->getNparams() ), i, j;
 	unsigned int maxntrials ( 0 );
-	double minp,minm,maxm,maxw,s;
+	double minp,minm,maxm,maxw,s,Z,p,m, count;
 	std::vector< std::vector<double> > grids ( nprm );
 	std::vector< std::vector<double> > margin ( nprm, std::vector<double>(gridsize) );
 	std::vector< std::vector<double> > distparams (nprm, std::vector<double>(3) );
@@ -152,6 +244,7 @@ PsiIndependentPosterior independent_marginals (
 	for ( i=0; i<nprm; i++ ) {
 		// Determine parameter ranges using the same routine as for starting values
 		parameter_range ( data, pmf, i, &minm, &maxm );
+		Z = 0;
 		// This routine is slightly more narrow than we would like for our purposes
 		if ( i>1 ) { minm=0; maxm=1.; }
 		if ( i==1 ) { minm=0; maxm*=2; }
@@ -160,10 +253,43 @@ PsiIndependentPosterior independent_marginals (
 
 		for ( j=0; j<nprm; j++ ) { prm[j] = MAP[j]; }
 
+		count = 0;
 		for ( j=0; j<gridsize; j++ ) {
 			prm[i] = grids[i][j];
-			margin[i][j] = exp ( -pmf->neglpost ( prm, data ) );
+			p = pmf->neglpost ( prm, data );
+#ifdef DEBUG_INTEGRATE
+			std::cerr << "p(" << i << "," << j << ") = " << p << " " << prm[i];
+#endif
+			// Clip
+			if ( isinf ( p ) ) {
+				if ( j>0 ) {
+					grids[i][j] = grids[i][j-1];
+					margin[i][j] = margin[i][j-1];
+				} else {
+					grids[i][j] = grids[i][j+1];
+					prm[i] = grids[i][j+1];
+					margin[i][j] = pmf->neglpost ( prm, data );
+					if ( isinf ( margin[i][j] ) ) std::cerr << "WARNING: margin("<<i<<","<<j<<") is inf\n";
+				}
+			} else margin[i][j] = (p > -1e10 ? p : -1e10 );
+			if ( isinf ( margin[i][j] ) ) margin[i][j] = 1e20;
+#ifdef DEBUG_INTEGRATE
+			std::cerr << " margin = " << margin[i][j] << "\n";
+#endif
+
+			// And compute average Z online
+			if (p>-1e10 && p<1e10) {
+				Z += ( margin[i][j] );
+				count ++;
+			}
 		}
+		Z /= count;
+
+		// Include Z for numerical stability
+		for ( j=0; j<gridsize; j++ ) {
+			margin[i][j] = exp ( Z - margin[i][j] );
+		}
+
 	}
 
 	for ( i=0; i<nprm; i++ ) {
@@ -204,7 +330,7 @@ MCMCList sample_posterior (
 	unsigned int nprm ( pmf->getNparams() ), i, j, k;
 	unsigned int nproposals ( nsamples*propose );
 	MCMCList finalsamples ( nsamples, nprm, data->getNblocks() );
-	double q,p;
+	double q,p,q_raw,p_raw;
 	double nduplicate ( 0 );
 	PsiRandom rng;
 	PsiPrior * posteri;
@@ -216,8 +342,9 @@ MCMCList sample_posterior (
 	std::vector<double> cum_probs ( nproposals );
 	std::vector<double> rnumbers ( nsamples );
 
-	for ( j=0; j<nprm; j++ )
+	for ( j=0; j<nprm; j++ ) {
 		posteriors[j] = post.get_posterior (j);
+	}
 
 	for ( i=0; i<nproposals; i++ ) {
 		// Propose
@@ -227,17 +354,36 @@ MCMCList sample_posterior (
 		q = 1.;
         for ( j=0; j<nprm; j++ ) {
 			posteri = post.get_posterior(j);
-            q *= posteri->pdf ( proposed[i][j] );
+			q_raw = posteri->pdf ( proposed[i][j] );
+			if ( q_raw > 1e10 )
+				q_raw = 1e10;
+			if ( q_raw != q_raw )
+				q_raw = 1e5;
+			if ( q_raw<1e-5 )
+				q_raw = 1e-5;
+            q *= q_raw;
 			delete posteri;
 		}
-        p = exp ( - pmf->neglpost ( proposed[i], data ) );
-        weights[i] = p/q;
+        p = - pmf->neglpost ( proposed[i], data );
+        weights[i] = exp ( p - log (q) );
+#ifdef DEBUG_INTEGRATE
+		if ( weights[i] != weights[i] || weights[i] > 1e10) {
+			std::cerr << "Index: " << i << ", weight: " << weights[i] << ", p: " << p << ", q: " << q << ", th: (" << proposed[i][0];
+			for ( j=1; j<nprm; j++ ) std::cerr << ", " << proposed[i][j];
+			std::cerr << ")\n";
+			std::cerr.flush();
+		}
+#endif
 
-		// Sort make a cumulative distribution vector for the weights
+		// make a cumulative distribution vector for the weights
 		if (i>0)
 			cum_probs[i] = cum_probs[i-1] + weights[i];
-		else
+		else {
 			cum_probs[0] = weights[0];
+#ifdef DEBUG_INTEGRATE
+			std::cerr << "w0 = " << weights[0] << "\n";
+#endif
+		}
 	}
 
 	for ( i=0; i<nsamples; i++ ) {
@@ -245,10 +391,18 @@ MCMCList sample_posterior (
 		rnumbers[i] = rng.rngcall();
 	}
 
+	// Normalize the cumulative distribution
 	for ( i=0; i<nproposals; i++ )
 		cum_probs[i] /= cum_probs[nproposals-1];
 
-	H = - cum_probs[0] * log(cum_probs[0]);
+	// Calculate entropy for diagnosis
+	if ( cum_probs[0] > 0 )
+		H = - cum_probs[0] * log(cum_probs[0]);
+	else
+		H = 0;
+#ifdef DEBUG_INTEGRATE
+	std::cerr << "H=" << H << ", cum_probs[0] = " << cum_probs[0] << "\n";
+#endif
 	N = 1.;
 	// Avoid zeros
 	for ( i=0; i<nproposals-1; i++ ) {
@@ -256,9 +410,17 @@ MCMCList sample_posterior (
 			H -= (cum_probs[i+1]-cum_probs[i]) * log ( cum_probs[i+1]-cum_probs[i] );
 			N += 1;
 		}
+#ifdef DEBUG_INTEGRATE
+		if ( H!=H ) {
+			std::cerr << "H became nan in the " << i << "th iteration, cum_probs["<<i+1<<"] = " << cum_probs[i+1] << ", cum_probs["<<i<<"] = " << cum_probs[i] <<"\n";
+			break;
+		}
+#endif
 	}
 	H /= log(N);
+#ifdef DEBUG_INTEGRATE
 	std::cerr << "H = " << H << "\n";
+#endif
 
 	sort ( rnumbers.begin(), rnumbers.end() );
 
