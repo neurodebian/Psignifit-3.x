@@ -12,8 +12,6 @@
 """ setup.py for Psignifit 3.x """
 
 from distutils.core import setup, Extension
-import numpy
-import os
 
 # metadata definitions
 name = "pypsignifit"
@@ -25,31 +23,15 @@ url= "http://sourceforge.net/projects/psignifit/"
 license = "MIT"
 packages = ["pypsignifit", "swignifit"]
 
-# Psi++ source files
-psipp_sources = [
-    "src/bootstrap.cc",
-    "src/core.cc",
-    "src/data.cc",
-    "src/mclist.cc",
-    "src/mcmc.cc",
-    "src/optimizer.cc",
-    "src/psychometric.cc",
-    "src/rng.cc",
-    "src/sigmoid.cc",
-    "src/special.cc",
-    "src/linalg.cc",
-    "src/getstart.cc",
-    "src/prior.cc",
-    "src/integrate.cc"]
-
 # swignifit interface
 swignifit_sources = ["swignifit/swignifit_raw.cxx"]
 swignifit = Extension('swignifit._swignifit_raw',
-        sources = psipp_sources + swignifit_sources,
+        sources = swignifit_sources,
+        library_dirs=['src/build'],
+        libraries=['psipp'],
         include_dirs=["src"])
-ext_modules = [swignifit]
 
-if __name__ == "__main__":
+def main(ext_modules=[swignifit]):
     setup(name = name,
         version = version,
         author = author,
@@ -59,3 +41,6 @@ if __name__ == "__main__":
         license = license,
         packages = packages,
         ext_modules = ext_modules)
+
+if __name__ == "__main__":
+    main()

@@ -2,16 +2,16 @@
 Contributing to Psignifit 3.0
 =============================
 
-psignifit 3.0 is free software. You are free to modify the software under the terms of the license
-that is distributed with psignifit 3.0. We welcome developers that want to contribute to psignifit 3.0.
+Psignifit 3.0 is free software. You are free to modify the software under the terms of the license
+that is distributed with Psignifit 3.0. We welcome developers that want to contribute to Psignifit 3.0.
 
 Software Architecture
 ---------------------
 
-The psignifit 3.x code base is logically split into several components:
+The Psignifit 3.x code base is logically split into several components:
 
 :psi++:
-    The C++ *engine* of psignifit.
+    The C++ *engine* of Psignifit.
 :pypsignifit:
     High level Python interface, including visualisation methods.
 :swignifit:
@@ -31,6 +31,23 @@ The following UML inspired diagram shows the individual components of Psignifit 
 .. image:: architecture.png
     :alt: Software Architecture
     :scale: 75 %
+
+The diagram shows all components and how they are connected. The high-level
+interfaces ``pypsignifit``, ``mpsignifit`` all eventually access
+the ``psi++`` engine via an layer. Depending on the interface language, the
+layer may be either ``swignifit`` or ``cli``.
+
+In Linux, building the software begins with compiling the ``psi++`` headers and
+sources into a shared library ``libpsipp.so``. Then ``swignifit`` is compiled
+in two steps. First the swig tool translates the swig definition file
+``swignifit_raw.i`` into the ``swignifit_raw.py`` and ``swignifit_raw.cxx``.
+Then, the shared library ``_swignifit_raw.so`` is compiled and linked with
+``libpsipp.so``. When accessing the engine from Python, the high-level
+``pypsignifit`` calls one of the Python files in swignifit
+``interface_methods.py`` or ``swignifit_raw.py``, which in turn call
+``_swignifit_raw.so``, which in turn calls ``libpsipp.so``. For Matlab The
+situation is similar, but instead of ``swignifit`` the ``cli`` handles calling
+the engine.
 
 Dependencies
 ------------
@@ -148,23 +165,45 @@ below).
 Commits
 .......
 
-To make it easier to keep track of the development of psignifit, we use the following marks for commits:
-
-* [NF]    new feature
-* [BF]    bug fix
-* [RF]    refactoring
-* [FO]    code formatting (adding spaces etc.)
-* [UT]    unit tests
-* [DOC]   documentation
-
-We may additionally use the following marks to identify what parts of the code
+To make it easier to keep track of the development of Psignifit, we use the
+following marks forto identify what parts of the code
 base we worked on:
 
-* C++
-* swig
-* py
-* R
-* build
+:C++:
+    C++ code base
+:swig:
+    swig interface
+:py:
+    Python code
+:R:
+    R code
+:matlab:
+    matlab code
+:build:
+    Build system
+:docs:
+    Documentation
+
+And the following marks  to identify the type of change that was made
+
+:NF:
+    new feature
+:BF:
+    bug fix
+:RF:
+    refactor
+:FO:
+    formatting
+:UT:
+    unit test
+
+Example::
+
+    [build/RF] do proper signed tags with new tag naming structure
+
+Also, If you wish to automate the process of creating such markers, to increase
+consistency, we suggest using the following git-hook:
+https://github.com/esc/commit-marker
 
 Merging
 .......
@@ -183,9 +222,9 @@ installation simply type::
 
     make
 
-You can then run:
+You can then run::
 
->>> import pypsignifit
+    >>> import pypsignifit as psi
 
 from the source directory. Furthermore you can use the environment variable
 ``PYTHONPATH`` in case you need to bring source directory into scope elsewhere
@@ -195,30 +234,33 @@ Maintainers Notes
 -----------------
 
 This section contains notes about the release process. We also support this
-process with various ``Makefile`` targets. Since Psignift 3.x is still beta
+process with various ``Makefile`` targets. All targets for release are prefixed
+with ``dist-``
+
+Since Psignift 3.x is still beta
 software we provide so called development snapshots as and when new features and
 bugfixes are available.
 
 Development Snapshots
 .....................
 
-Development snapshots are made on a regular basis. They consist of the following steps
+Development snapshots are made on a regular basis. They are invoked with::
 
-* make a changelog entry
-* create a tarball. The tarball should be named as
-  ``psignifit3.0_beta_DD-MM-YYYY.tar.gz``
-* create a tag in the git repository. The tag for a snapshot should be
-  ``snap-YYYY-MM-DD``
-* upload the tarball to sourceforge (into a new folder!)
-* push tags
+    make dist-upload-archives
+
+This will create all the required zip files and windows installers, tag the git
+repository, and upload the files and tags to sourceforge.
 
 Tags
 ....
 
 Tags should mark critical points in the development history in the following way:
 
-* ``snap-YYYY-MM-DD`` marks the release of a development snapshot
-* ``doc-YYYY-MM-DD`` marks a modification of the documentation that has been uploaded to sourceforge.
+* ``release/3.0_beta.YYYYMMDD.1`` marks the release of a development snapshot
+* ``doc-YYYYMMDD`` marks a modification of the documentation that has been uploaded to sourceforge.
+
+Older tags may have different versioning schemes. This scheme was established
+beginning of 2012.
 
 Extending
 ---------

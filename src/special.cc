@@ -32,7 +32,6 @@ double safe_log ( double x )
 }
 
 double gammaln(double xx) {
-	// More or less copied from Numerical Recipes
 	double x,y,tmp,ser;
 	static double cof[6]={
 		76.18009172947146,

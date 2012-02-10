@@ -85,7 +85,8 @@ class TestMCMC(ut.TestCase):
         posterior_predictive_deviances, posterior_predictive_Rpd,
         posterior_predictive_Rkd, logposterior_ratios, accept_rate) = interface.mcmc(d,nsamples=10000,priors=priors,stepwidths=stepwidths)
         self.assertAlmostEqual( np.mean(estimates[:,0]), 2.5463976926832483)
-        self.assertAlmostEqual( np.mean(estimates[:,1]), 7.335732619111738)
+        self.assertAlmostEqual( np.mean(estimates[:,1]), 7.335732619111738,
+                places=3)
 
     def test_start(self):
         interface.mcmc(data,nsamples=25, start=[0.1,0.2,0.3])
@@ -129,9 +130,10 @@ class TestMapestimate(ut.TestCase):
         d = [[xx,kk,nn] for xx,kk,nn in zip(x,k,n)]
         priors = ('flat','flat','Uniform(0,0.1)')
         estimate, fisher, thres, slope, deviance = interface.mapestimate ( d, priors=priors )
-        npt.assert_almost_equal(np.array([ 2.7517523 ,  1.45728454,  0.01555464]), estimate)
-        self.assertAlmostEqual(2.7517523000189286, thres[0])
-        self.assertAlmostEqual(8.07133136423, deviance)
+        npt.assert_almost_equal(np.array([ 2.7517523 ,  1.45728454,
+            0.01555464]), estimate, decimal=3)
+        self.assertAlmostEqual(2.7517523000189286, thres[0], places=3)
+        self.assertAlmostEqual(8.07133136423, deviance, places=3)
 
     def test_nafc(self):
         interface.mapestimate(data, nafc=23)

@@ -98,28 +98,21 @@ We are very grateful to the following people, who have contributed to Psignifit3
 How to install
 **************
 
-Download the current version of Psignifit from:
-
-    `<http://sourceforge.net/projects/psignifit/>`_
-
-In the following, installation instructions are provided for different operating
-systems.
+The following section detail the installation instructions for the Python
+version of **Psignifit (python-psignifit)** and the **Command Line Interface
+(cli)**:
 
 * :doc:`INSTALL_LINUX`
 * :doc:`INSTALL_MAC`
 * :doc:`INSTALL_WINDOWS`
 
-Currently this documentation only describes the installation of the Python version of Psignifit.
+If you wish to use the **Matlab version of Psignifit (mpsignifit)**, *first* follow
+the appropriate installation instructions above to install the Command Line
+Interface. *And then* see :doc:`INSTALL_MATLAB`. The Command Line Interface *is
+required* for the Matlab version of Psignifit.
 
-If you are looking for installation instructions for Matlab, see
-:doc:`INSTALL_MATLAB`. Installation instructions for R are going to follow as
-soon as these toolboxes are ready for use.  Unless you are an expert user, or
-want to use the Matlab version mpsignifit, you do not need to install the
-optional commandline interface, which is however required for the Matlab version
-mpsignifit.
-
-The C++ core of Psignifit does the real work. It is completely coded in C++ and
-does not require any additional libraries installed.
+Installation instructions for the R version of Psignifit (rpsignifit) are going
+to follow as soon as this toolboxes is ready for use.
 
 For additional information about the structure of the code, the build system,
 version control and an extended list of dependencies  see: :doc:`CONTRIBUTING`.

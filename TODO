@@ -1,0 +1,9 @@
+* Mac Install system wide -- /usr/bin
+* Lion: PATH differs between terminal and matlab
+* Lion: tests faile with explicite stepwidths
+
+* release tags : release/3.0_beta.20111109.1
+* tags signieren mit git tag -s
+* kein doc packet
+* evtl irgendwann keine matplotlib abhängigkeitn ~> debian/control
+* split tests into "may fail" and "should never fail"
