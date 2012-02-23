@@ -270,7 +270,7 @@ dist-changelog:
 		echo "FATAL: not on master branch!"; \
 		false; \
 	fi
-	echo `date +%Y-%m-%d > tmp`
+	echo `date +%Y-%m-%d` - Psignifit-3.x - $(RELEASE_TAG) > tmp
 	echo >> tmp
 	echo "* " >> tmp
 	echo >> tmp
