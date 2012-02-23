@@ -336,6 +336,6 @@ dist-git-tag-release:
 		echo "Currently we do not support this"; \
 		false; \
 	fi
-	git tag -s -m "Psignifit3.x $(RELEASE_TAG)"  $(RELEASE_TAG)
+	git tag -s -m "Psignifit-3.x $(RELEASE_TAG)"  $(RELEASE_TAG)
 
 # }}}
