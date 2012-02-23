@@ -270,7 +270,7 @@ dist-changelog:
 		echo "FATAL: not on master branch!"; \
 		false; \
 	fi
-	echo $(LONGTODAY) > tmp
+	echo `date +%Y-%m-%d > tmp`
 	echo >> tmp
 	echo "* " >> tmp
 	echo >> tmp
