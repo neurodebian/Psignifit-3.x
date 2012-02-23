@@ -316,7 +316,7 @@ dist-upload-doc: python-doc
 
 dist-prepare-upload: dist-swigged dist-win
 	mkdir ${ARCHIVE_PREFIX}
-	cp ${TAR_FILE} ${WINDOWS_CLI_INSTALLER} ${ARCHIVE_PREFIX}
+	cp ${ZIP_FILE} ${WINDOWS_CLI_INSTALLER} ${ARCHIVE_PREFIX}
 	if [ -d dist ]; then \
 		cp dist/pypsignifit-3.0beta.win32-py2.6.exe ${ARCHIVE_PREFIX}/${WINDOWS_PY_INSTALLER}; \
 	else \
