@@ -284,7 +284,6 @@ dist-changelog:
 		false; \
 	else \
 		git commit changelog -m "changelog entry for upload"; \
-		git push origin; \
 	fi
 
 dist-tar: python-version cli-version mpsignifit-version
@@ -327,6 +326,7 @@ dist-upload-archives: | dist-changelog dist-git-tag-release dist-prepare-upload
 	# this upload will only work with Ingo's account
 	scp -rv ${ARCHIVE_PREFIX} igordertigor,psignifit@frs.sourceforge.net:/home/frs/project/p/ps/psignifit/
 	#rm -r psignifit3.0_beta_$(TODAY)
+	git push origin master
 	git push origin $(RELEASE_TAG)
 
 dist-git-tag-release:
