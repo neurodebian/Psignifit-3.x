@@ -88,7 +88,7 @@ class PsiPsychometric {
 				) const;                                          ///< 1st derivative of the negative log likelihood
 		const PsiCore* getCore ( void ) const { return Core; }                ///< get the core of the psychometric function
 		const PsiSigmoid* getSigmoid ( void ) const { return Sigmoid; }       ///< get the sigmoid of the psychometric function
-		void setPrior ( unsigned int index, PsiPrior* prior ) throw(BadArgumentError);                   ///< set a Prior for the parameter indicated by index
+		virtual void setPrior ( unsigned int index, PsiPrior* prior ) throw(BadArgumentError);                   ///< set a Prior for the parameter indicated by index
 		double evalPrior ( unsigned int index, double x ) const {return priors[index]->pdf(x);}              ///< evaluate the respective prior at value x
 		virtual double randPrior ( unsigned int index ) const { return priors[index]->rand(); }                            ///< sample form a prior
 		const PsiPrior* getPrior ( unsigned int index ) const { return priors[index]; } ///< get a prior
@@ -118,7 +118,7 @@ class PsiPsychometric {
 			const PsiData* data,                                                         ///< data for which the likelihood should be evaluated
 			unsigned int i                                                               ///< index of the parameter for which the derivative should be evaluated
 			) const;                                                                 ///< derivative of the negative loglikelihood with respect to parameter i
-		double dlposteri (
+		virtual double dlposteri (
 			std::vector<double> prm,                                                     ///< parameters of the psychometric function model
 			const PsiData* data,                                                         ///< data for which the likelihood should be valuated
 			unsigned int i                                                               ///< index of the parameter for which the derivative should be evaluated
@@ -128,6 +128,42 @@ class PsiPsychometric {
 		double dpredict ( const std::vector<double>& prm, double x, unsigned int i ) const;    ///< partial derivative of psychometric function prediction w.r.t. i-th parameter
 		double ddpredict ( const std::vector<double>& prm, double x, unsigned int i, unsigned int j ) const;    ///< 2nd partial derivative of psychometric function prediction w.r.t. i-th and j-th parameters
 };
+
+/** \brief psychometric function with Jeffrey's prior on the parameters
+ *
+ * A psychometric function model that has Jeffrey's improper, non-informative prior on the parameters
+ * This model differs in two respects from the regular psychometric function model.
+ *
+ * First, you can't set priors for individual parameters. Jeffrey's prior applies to all parameters.
+ * If you try to obtain a prior for a certain parameter, you will get a PsiPrior instance. This object will
+ * also be used, if you try to sample from the priors. This holds for everything else that tries to access
+ * the priors.
+ *
+ * Second, evaluating the neglpost method takes a bit longer -- Jeffrey's prior is realtively costly to evaluate.
+ */
+class PMF_with_JeffreysPrior : public PsiPsychometric
+{
+	private:
+		Matrix fisher;
+	public:
+		PMF_with_JeffreysPrior (
+			int nAFC,                                                                ///< number of alternatives in the task (1 indicating yes/no)
+			PsiCore * core,                                                          ///< internal part of the nonlinear function (in many cases this is actually a linear function)
+			PsiSigmoid * sigmoid                                                     ///< "external" saturating part of the nonlinear function
+			) : PsiPsychometric ( nAFC, core, sigmoid ), fisher(getNparams(), getNparams()) { }    ///< Set up a psychometric function model for an nAFC task (nAFC=1 ~> yes/no)
+		~PMF_with_JeffreysPrior () { }
+
+		double neglpost ( const std::vector<double>& prm,
+				const PsiData* data
+				) const;
+		double dlposteri (
+			std::vector<double> prm,                                                     ///< parameters of the psychometric function model
+			const PsiData* data,                                                         ///< data for which the likelihood should be valuated
+			unsigned int i                                                               ///< index of the parameter for which the derivative should be evaluated
+			) const;                                                                 ///< derivative of the negative log posterior with respect to parameter i
+		void setPrior ( unsigned int index, PsiPrior* prior ) throw(BadArgumentError) { throw BadArgumentError ( "With Jeffrey's prior, you can't set independent priors for individual parameters" ); }                   ///< set a Prior for the parameter indicated by index
+};
+
 
 /** \brief Psychometric function that allows for models the variance of the data by a beta distribution
  *

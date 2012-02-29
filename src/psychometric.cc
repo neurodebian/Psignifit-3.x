@@ -595,6 +595,77 @@ double PsiPsychometric::ddpredict ( const std::vector<double>& prm, double x, un
 	return ddf;
 }
 
+/******************************** PMF_with_JeffreysPrior ********************************/
+
+double PMF_with_JeffreysPrior::neglpost ( const std::vector<double>& prm, const PsiData* data ) const
+{
+	unsigned int i, j, k;
+	double dd, pk, dpi, dpj;
+
+	// calculate expected Fisher Information
+	for ( i=0; i<getNparams(); i++ ) {
+		for ( j=i; j<getNparams(); j++ ) {
+			dd = 0;
+			for ( k=0; k<data->getNblocks(); k++ ) {
+				pk = evaluate ( data->getIntensity(k), prm );
+				dpi = dpredict ( prm, data->getIntensity(k), i );
+				dpj = dpredict ( prm, data->getIntensity(k), j );
+				dd += data->getNtrials(k) * (1./pk + 1./(1-pk)) * dpi * dpj;
+			}
+			fisher(i,j) = fisher(j,i) = dd;
+		}
+	}
+	
+	// Calculate Determinant
+	if (getNparams()==3) {
+		dd = fisher(0,0)*fisher(1,1)*fisher(2,2)
+			+ fisher(0,1)*fisher(1,2)*fisher(2,0)
+			+ fisher(1,0)*fisher(2,1)*fisher(0,2)
+			- fisher(0,2)*fisher(1,1)*fisher(2,0)
+			- fisher(0,0)*fisher(1,2)*fisher(2,1)
+			- fisher(2,2)*fisher(0,1)*fisher(1,0);
+	} else if (getNparams()==4) {
+		dd = fisher(0,0)*
+			( fisher(1,1)*fisher(2,2)*fisher(3,3) + fisher(1,2)*fisher(2,3)*fisher(3,1) + fisher(2,1)*fisher(3,2)*fisher(1,3)
+			- fisher(1,3)*fisher(2,2)*fisher(3,1) - fisher(1,2)*fisher(2,1)*fisher(3,3) - fisher(1,1)*fisher(2,3)*fisher(3,2) );
+		// std::cout << "dd0 = " << dd << "\n";
+		dd -= fisher(1,0)*
+			( fisher(0,1)*fisher(2,2)*fisher(3,3) + fisher(0,2)*fisher(2,3)*fisher(3,1) + fisher(0,3)*fisher(2,1)*fisher(3,2)
+			- fisher(0,3)*fisher(2,2)*fisher(3,1) - fisher(0,2)*fisher(2,1)*fisher(3,3) - fisher(0,1)*fisher(2,3)*fisher(3,2) );
+		// std::cout << "dd1 = " << dd << "\n";
+		dd += fisher(2,0)*
+			( fisher(0,1)*fisher(1,2)*fisher(3,3) + fisher(0,2)*fisher(1,3)*fisher(3,1) + fisher(0,3)*fisher(1,1)*fisher(3,2)
+			- fisher(0,3)*fisher(1,2)*fisher(3,1) - fisher(0,2)*fisher(1,1)*fisher(3,3) - fisher(0,1)*fisher(1,3)*fisher(3,2) );
+		// std::cout << "dd2 = " << dd << "\n";
+		dd -= fisher(3,0)*
+			( fisher(0,1)*fisher(1,2)*fisher(2,3) + fisher(0,2)*fisher(1,3)*fisher(2,1) + fisher(0,3)*fisher(1,1)*fisher(2,2)
+			- fisher(0,3)*fisher(1,2)*fisher(2,1) - fisher(0,2)*fisher(1,1)*fisher(2,3) - fisher(0,1)*fisher(1,3)*fisher(2,2) );
+		// std::cout << "dd3 = " << dd << "\n";
+	}
+
+	/*
+	std::cout << "I = [ [ " << fisher(0,0) << ", " << fisher(0,1) << ", " << fisher(0,2) << ", " << fisher(0,3) << "],\n"
+					<< "[ " << fisher(1,0) << ", " << fisher(1,1) << ", " << fisher(1,2) << ", " << fisher(1,3) << "],\n"
+					<< "[ " << fisher(2,0) << ", " << fisher(2,1) << ", " << fisher(2,2) << ", " << fisher(2,3) << "],\n"
+					<< "[ " << fisher(3,0) << ", " << fisher(3,1) << ", " << fisher(3,2) << ", " << fisher(3,3) << "]]\n";
+
+	std::cout << "dd = " << dd << "\n";
+	*/
+
+	return negllikeli ( prm, data ) - 0.5*log(dd);
+}
+
+double PMF_with_JeffreysPrior::dlposteri ( std::vector<double> prm, const PsiData* data, unsigned int i ) const
+{
+	// numerical approximation
+	double df, h(.001);
+	std::vector<double> prm2 (prm);
+
+	prm2[i] += h;
+	df = neglpost ( prm2, data ) - neglpost ( prm, data );
+	return df/h;
+}
+
 /******************************** BetaPsychometric **************************************/
 
 double BetaPsychometric::negllikeli ( const std::vector<double>& prm, const PsiData* data ) const
