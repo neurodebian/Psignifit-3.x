@@ -643,6 +643,14 @@ double PMF_with_JeffreysPrior::neglpost ( const std::vector<double>& prm, const 
 		// std::cout << "dd3 = " << dd << "\n";
 	}
 
+	// std::cerr << prm[0] << " " << prm[1] << " " << prm[2] << " " << dd << " " << negllikeli (prm, data ) << " " << 0.5*log(dd) << "\n";
+
+	// if ( dd!=dd ) {
+	// 	std::cerr << "I = [ [ " << fisher(0,0) << ", " << fisher(0,1) << ", " << fisher(0,2) << "],\n"
+	// 					<< "[ " << fisher(1,0) << ", " << fisher(1,1) << ", " << fisher(1,2) << "],\n"
+	// 					<< "[ " << fisher(2,0) << ", " << fisher(2,1) << ", " << fisher(2,2) << "]]\n";
+	// }
+
 	/*
 	std::cout << "I = [ [ " << fisher(0,0) << ", " << fisher(0,1) << ", " << fisher(0,2) << ", " << fisher(0,3) << "],\n"
 					<< "[ " << fisher(1,0) << ", " << fisher(1,1) << ", " << fisher(1,2) << ", " << fisher(1,3) << "],\n"
