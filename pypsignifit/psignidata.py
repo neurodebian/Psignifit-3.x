@@ -663,6 +663,9 @@ class BayesInference ( PsiInference ):
                 Alternatively, priors can be given as a dictionary that only specifies
                 priors for those parameters you want to set in that case you can use
                 'a','b','m','w','guess','gamma','lapse','lambda' as keys.
+                Alternatively, this may be the keyword 'Jeffreys' to indicate that
+                Jeffrey's noninformative prior should be used. Note that evaluation
+                of Jeffrey's prior is computationally more expensive than the other priors.
             *nafc* :
                 number of response alternatives. If nafc==1, this indicates a Yes/No
                 task
@@ -1818,7 +1821,9 @@ class ASIRInference ( PsiInference ):
             *core* :
                 core object to be used
             *priors* :
-                a tuple of priors to be applied to the parameters
+                a tuple of priors to be applied to the parameters. Alternatively, this may be the keyword 'Jeffreys' to
+                indicate that Jeffrey's noninformative prior should be used. Note that evaluation of Jeffrey's prior is
+                computationally more expensive than the other priors.
             *nafc* :
                 number of stimulus alternatives presented in a forced choice design. If only one stimulus has been
                 presented, this will typically be 1.
