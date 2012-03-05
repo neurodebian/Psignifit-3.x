@@ -37,6 +37,16 @@ bool get_parametric ( const mxArray * inp ) {
 		mexErrMsgTxt ( "(mex) get_parametric: could not interprete parametric field\n" );
 }
 
+bool get_gammaislambda ( const mxArray * inp ) {
+	if ( mxGetFieldNumber ( inp, "gammaislambda" ) <0 )
+		mexErrMsgTxt ( "(mex) get_gammaislambda: 'gammaislambda' was not specified!\n" );
+	mxArray * gammaislambda = mxGetField ( inp, 0, "gammaislambda" );
+	if ( mxIsDouble ( gammaislambda ) )
+		return *( (double*)mxGetData ( gammaislambda ) );
+	else
+		mexErrMsgTxt ( "(mex) get_gammaislambda: could not interprete gammaislambda field\n" )
+}
+
 PsiSigmoid * get_sigmoid ( const mxArray * inp ) {
 	if ( mxGetFieldNumber ( inp, "sigmoid" )  <0 )
 		mexErrMsgTxt ( "(mex) get_sigmoid: 'sigmoid' was not specified!\n" );
@@ -233,6 +243,8 @@ PsiPsychometric *make_pmf ( const mxArray * inp ) {
 	mexPrintf ( "HL: sigmoid.code = %d", sigmoid->getcode () );
 
 	PsiPsychometric * pmf = new PsiPsychometric ( nafc, core, sigmoid );
+	if ( get_gammaislambda ( inp ) )
+		pmf->setgammatolambda();
 	delete core;
 	delete sigmoid;
 
