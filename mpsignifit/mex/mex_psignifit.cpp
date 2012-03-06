@@ -44,7 +44,7 @@ bool get_gammaislambda ( const mxArray * inp ) {
 	if ( mxIsDouble ( gammaislambda ) )
 		return *( (double*)mxGetData ( gammaislambda ) );
 	else
-		mexErrMsgTxt ( "(mex) get_gammaislambda: could not interprete gammaislambda field\n" )
+		mexErrMsgTxt ( "(mex) get_gammaislambda: could not interprete gammaislambda field\n" );
 }
 
 PsiSigmoid * get_sigmoid ( const mxArray * inp ) {
