@@ -14,14 +14,11 @@ function results = MapEstimate ( data, priors, varargin )
 %    the respective block, and the third column should contain the total number of
 %    trials presented in the respective block.
 %
-% priors should be a struct with the fields m_or_a, w_or_b, lambda, and gamma. 'None'
-%    can be used to specify "No prior" i.e. an improper, flat prior. A valid prior would
-%    be
+% priors should be a cell with the priors for parameters m,w,lambda,gamma in that
+%    sequence. 'None' or 'flat' can be used to specify "No prior" i.e. an improper,
+%    flat prior. A valid prior would for example be
 %
-%    >> priors.m_or_a = 'None';
-%    >> priors.w_or_b = 'None';
-%    >> priors.lambda = 'Uniform(0,.1)';
-%    >> prior.gammas  = 'Uniform(0,.1)';
+%    >> priors = {'None','None','Uniform(0,.1)','Uniform(0,.1)'};
 %
 %    For more information on the specification of priors for psychometric functions, see
 %
@@ -86,85 +83,64 @@ if size ( data, 2 ) ~= 3
 end
 
 % default values
-nafc = 2;
-sigmoid = 'logistic';
-core    = 'mw0.1';
-gil = '';
-gammaislambda = false;
-verbosity = '';
-cuts = [0.25,0.5,0.75];
+config.nafc = 2;
+config.sigmoid = 'logistic';
+config.core    = 'mw0.1';
+config.gammaislambda = false;
+config.cuts = [0.25,0.5,0.75];
 verbose = false;
 
 % Set a default prior if none is present
 if exist ( 'priors' ) ~= 1;
-    priors.m_or_a = 'None';
-    priors.w_or_b = 'None';
-    priors.lambda = 'Uniform(0,.1)';
-    priors.gamma  = 'Uniform(0,.1)';
+    config.priors = {'None','None','Uniform(0,.1)','Uniform(0,.1)'};
+else
+    config.priors = priors;
 end
+
+config.data = data;
 
 % Check input
 while size(varargin,2) > 0
     [opt,varargin] = popoption ( varargin );
     switch opt
     case 'nafc'
-        [nafc,varargin] = popoption(varargin);
+        [config.nafc,varargin] = popoption(varargin);
     case 'sigmoid'
-        [sigmoid,varargin] = popoption(varargin);
+        [config.sigmoid,varargin] = popoption(varargin);
     case 'core'
-        [core,varargin] = popoption(varargin);
+        [config.core,varargin] = popoption(varargin);
     case 'gammaislambda'
-        gil = '-gammaislambda';
-        gammaislambda = true;
+        config.gammaislambda = true;
     case 'verbose'
-        % verbosity = '-v';   % Matlab system call merges stdout and stderr --- so this does not well
         verbose = true;
     case 'cuts'
-        [cuts,varargin] = popoption(varargin);
+        [config.cuts,varargin] = popoption(varargin);
     otherwise
         warning ( sprintf ( 'unknown option: %s !\n' , opt ) );
     end
 end
 
-% Store the data
-dataf = tempname;
-save ( '-ascii', dataf, 'data' );
-
-if nafc > 1
-    prior4 = '';
-elseif gammaislambda
-    prior4 = '';
+% Check length of priors
+if config.nafc==1 & ~config.gammaislambda;
+    nprm = 4;
 else
-    prior4 = sprintf ( '-prior4 "%s"', getfield ( priors, 'gamma' ) );
+    nprm = 3;
+end
+if length ( priors ) < nprm;
+    error ( 'Not enough priors' );
 end
 
-% Determine cuts
-scuts = sprintf ( '"%s', num2str ( cuts, '%f,') );
-scuts(length(scuts)) = '"';
+% Workhorse
+results = mex_psignifit ( 'map', config );
 
-% Write the command
-cmd = sprintf ( 'psignifit-mapestimate %s --matlab -prior1 "%s" -prior2 "%s" -prior3 "%s" %s -nafc %d -s %s -c %s -cuts %s %s', ...
-    dataf, getfield(priors,'m_or_a'), getfield(priors,'w_or_b'), getfield(priors,'lambda'), prior4, ...
-    nafc, sigmoid, core, scuts, verbosity);
+results.call          = 'mapestimate';
+results.nafc          = config.nafc;
+results.sigmoid       = config.sigmoid;
+results.core          = config.core;
+results.gammaislambda = config.gammaislambda;
+results.cuts          = config.cuts;
+results.data          = config.data;
+results.priors        = config.priors;
+results.burnin        = 1;
+results.nsamples      = 0;
 
-if verbose
-    cmd
-end
-
-% Do the real work
-[status,output] = system ( cmd );
-eval ( output );
-
-results.call = 'mapestimate';
-results.nafc = nafc;
-results.sigmoid = sigmoid;
-results.core = core;
-results.gammaislambda = gammaislambda;
-results.cuts = cuts;
-results.data = data;
-results.priors = priors;
-results.burnin = 1;
-results.nsamples = 0;
-
-% clean up
-delete ( dataf );
