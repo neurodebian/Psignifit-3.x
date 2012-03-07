@@ -243,7 +243,7 @@ PsiPsychometric *make_pmf ( const mxArray * inp ) {
 	mexPrintf ( "HL: sigmoid.code = %d", sigmoid->getcode () );
 
 	PsiPsychometric * pmf = new PsiPsychometric ( nafc, core, sigmoid );
-	if ( get_gammaislambda ( inp ) )
+	if ( get_nafc ( inp )==1 && get_gammaislambda ( inp ) )
 		pmf->setgammatolambda();
 	delete core;
 	delete sigmoid;
