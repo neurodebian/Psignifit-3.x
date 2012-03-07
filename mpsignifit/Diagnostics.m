@@ -21,12 +21,12 @@ function results = Diagnostics ( data, parameters, varargin )
 % The behavior of this function can be modified by specifiing certain addition
 % parameters. To specify one of these parameters, call the function as
 %
-% >> Diagnostics ( data, priors, 'PARAM', VALUE )
+% >> Diagnostics ( data, parameters, 'PARAM', VALUE )
 %
 % Some parameters do not require a value (for instance the 'gammaislambda' setting). In this
 % case call the function as
 %
-% >> Diagnostics ( data, priors, 'PARAM' )
+% >> Diagnostics ( data, parameters, 'PARAM' )
 %
 % In the following list, all valid parameters are given. If a parameter requires a value argument,
 % the type of this value argument is given after the name of the parameter and separated by a comma.
