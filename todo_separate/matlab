@@ -1,1 +1,7 @@
++ mcmc in mex
++ using mex in all .m files except MapEstimate.m
++ ASIRInference.m
+
 + add sensitivity analysis
+
++ jeffrey's prior
