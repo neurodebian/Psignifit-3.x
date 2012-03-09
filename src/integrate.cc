@@ -19,7 +19,7 @@ PsiIndependentPosterior::PsiIndependentPosterior ( unsigned int nprm,
 			M(j,0) = margins[i][j];
 			p = posteriors[i]->pdf ( grids[i][j] );
 			k = 1;
-			while ( isinf ( p ) ) {
+			while ( std::isinf ( p ) ) {
 				p = posteriors[i]->pdf ( grids[i][j+k] );
 				k++;
 				if ( j+k>= grids[i].size() ) p = 1e40;
@@ -89,7 +89,7 @@ void normalize_probability ( const std::vector<double>& x, std::vector<double>& 
 	unsigned int i;
 
 	for ( i=1; i<x.size(); i++ ) {
-		if ( fx[i]!=fx[i] || isinf ( fx[i] ) ) {
+		if ( fx[i]!=fx[i] || std::isinf ( fx[i] ) ) {
 			continue;
 		}
 		// Trapez Quadradure
@@ -124,7 +124,7 @@ double numerical_mean ( const std::vector<double>& x, const std::vector<double>&
 
 	for ( i=1; i<x.size(); i++ ) {
 		// Trapez Quadrature
-		if ( fx[i] != fx[i] || isinf ( fx[i] ) ) {
+		if ( fx[i] != fx[i] || std::isinf ( fx[i] ) ) {
 			continue;
 		}
 		// f = 0.25*(x[i]+last_x)*(fx[i]+last_f);
@@ -150,7 +150,7 @@ double numerical_variance ( const std::vector<double>& x, const std::vector<doub
 
 	for ( i=0; i<x.size(); i++ ) {
 		// Trapze Quadrature
-		if ( fx[i] != fx[i] || isinf ( fx[i] ) )
+		if ( fx[i] != fx[i] || std::isinf ( fx[i] ) )
 			continue;
 		// mx = 0.5*(x[i]+last_x);
 		// mf = 0.5*(fx[i]+last_f);
@@ -262,7 +262,7 @@ PsiIndependentPosterior independent_marginals (
 			std::cerr << "p(" << i << "," << j << ") = " << p << " " << prm[i];
 #endif
 			// Clip
-			if ( isinf ( p ) || p!=p ) {
+			if ( std::isinf ( p ) || p!=p ) {
 				if ( j>0 ) {
 					grids[i][j] = grids[i][j-1];
 					margin[i][j] = margin[i][j-1];
@@ -270,10 +270,10 @@ PsiIndependentPosterior independent_marginals (
 					grids[i][j] = grids[i][j+1];
 					prm[i] = grids[i][j+1];
 					margin[i][j] = pmf->neglpost ( prm, data );
-					if ( isinf ( margin[i][j] ) ) std::cerr << "WARNING: margin("<<i<<","<<j<<") is inf\n";
+					if ( std::isinf ( margin[i][j] ) ) std::cerr << "WARNING: margin("<<i<<","<<j<<") is inf\n";
 				}
 			} else margin[i][j] = (p > -1e10 ? p : -1e10 );
-			if ( isinf ( margin[i][j] ) ) margin[i][j] = 1e20;
+			if ( std::isinf ( margin[i][j] ) ) margin[i][j] = 1e20;
 #ifdef DEBUG_INTEGRATE
 			std::cerr << " margin = " << margin[i][j] << "\n";
 #endif
@@ -366,7 +366,7 @@ MCMCList sample_posterior (
 			delete posteri;
 		}
         p = - pmf->neglpost ( proposed[i], data );
-		if ( isinf ( p ) || p!=p )
+		if ( std::isinf ( p ) || p!=p )
 			weights[i] = 0;
 		else
 			weights[i] = exp ( p - log (q) );
