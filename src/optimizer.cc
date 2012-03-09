@@ -73,6 +73,8 @@ double lgst ( double x ) {
 	return 1./(1+exp(-x));
 }
 double lgit ( double p ) {
+	if ( p<1e-8 ) p=1e-8;
+	if ( p>1-1e-8 ) p = 1-1e-8;
 	return log ( p/(1-p) );
 }
 

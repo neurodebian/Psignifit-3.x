@@ -127,11 +127,19 @@ def make_pmf(dataset, nafc, sigmoid, core, priors, gammaislambda=False):
     """
     sigmoid = get_sigmoid(sigmoid)
     core = get_core(core, dataset, sigmoid)
-    pmf = sfr.PsiPsychometric(nafc, core, sigmoid)
+    if not priors is None:
+        pr = "".join(priors)
+    else:
+        pr = ""
+    if pr in ["Jeffreys","jeffreys","Jeffrey","jeffrey"]:
+        pmf = sfr.PMF_with_JeffreysPrior ( nafc, core, sigmoid );
+    else:
+        pmf = sfr.PsiPsychometric(nafc, core, sigmoid)
     if gammaislambda:
         pmf.setgammatolambda()
     nparams = pmf.getNparams()
-    set_priors(pmf,priors)
+    if not pr in ["Jeffreys","jeffreys","Jeffrey","jeffrey"]:
+        set_priors(pmf,priors)
     return pmf, nparams
 
 def make_dataset_and_pmf(data, nafc, sigmoid, core, priors, gammaislambda=False ):

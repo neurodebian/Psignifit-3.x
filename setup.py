@@ -12,8 +12,6 @@
 """ setup.py for Psignifit 3.x """
 
 from distutils.core import setup, Extension
-import numpy
-import os
 
 # metadata definitions
 name = "pypsignifit"
@@ -32,9 +30,8 @@ swignifit = Extension('swignifit._swignifit_raw',
         library_dirs=['src/build'],
         libraries=['psipp'],
         include_dirs=["src"])
-ext_modules = [swignifit]
 
-if __name__ == "__main__":
+def main(ext_modules=[swignifit]):
     setup(name = name,
         version = version,
         author = author,
@@ -44,3 +41,6 @@ if __name__ == "__main__":
         license = license,
         packages = packages,
         ext_modules = ext_modules)
+
+if __name__ == "__main__":
+    main()

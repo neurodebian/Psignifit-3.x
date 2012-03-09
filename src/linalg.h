@@ -11,7 +11,7 @@
 #include <cmath>
 
 /***************************************************************************************
- * This file defines vary basic linear algebra facilities
+ * This file defines very basic linear algebra facilities
  *
  * These are not particularly fast or fancy implementations. They are just intended
  * to keep the number of dependencies low.

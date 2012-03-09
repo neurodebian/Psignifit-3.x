@@ -9,6 +9,7 @@ CLI_VERSION_HEADER=cli_version.h
 BUILD=build
 
 SRC=../src
+export LIBRARY_PATH := $(SRC)/build
 HEADERS= $(addprefix $(SRC)/, core.h data.h errors.h optimizer.h prior.h psychometric.h sigmoid.h bootstrap.h mclist.h special.h mcmc.h rng.h linalg.h getstart.h )
 CLI_H= cli.h cli_utilities.h
 CLI_O= $(addprefix $(BUILD)/, cli.o cli_utilities.o)
