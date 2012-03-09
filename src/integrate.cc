@@ -227,7 +227,7 @@ PsiIndependentPosterior independent_marginals (
 		const PsiData *data
 		)
 {
-	unsigned int gridsize (1000);
+	unsigned int gridsize (100);
 
 	unsigned int nprm ( pmf->getNparams() ), i, j;
 	unsigned int maxntrials ( 0 );
@@ -242,6 +242,7 @@ PsiIndependentPosterior independent_marginals (
 	std::vector<double> prm ( MAP );
 	delete opt;
 	for ( i=0; i<nprm; i++ ) {
+		std::cerr << "================= prm " << i << "================\n";
 		// Determine parameter ranges using the same routine as for starting values
 		parameter_range ( data, pmf, i, &minm, &maxm );
 		Z = 0;
@@ -261,7 +262,7 @@ PsiIndependentPosterior independent_marginals (
 			std::cerr << "p(" << i << "," << j << ") = " << p << " " << prm[i];
 #endif
 			// Clip
-			if ( isinf ( p ) ) {
+			if ( isinf ( p ) || p!=p ) {
 				if ( j>0 ) {
 					grids[i][j] = grids[i][j-1];
 					margin[i][j] = margin[i][j-1];
@@ -365,7 +366,10 @@ MCMCList sample_posterior (
 			delete posteri;
 		}
         p = - pmf->neglpost ( proposed[i], data );
-        weights[i] = exp ( p - log (q) );
+		if ( isinf ( p ) || p!=p )
+			weights[i] = 0;
+		else
+			weights[i] = exp ( p - log (q) );
 #ifdef DEBUG_INTEGRATE
 		if ( weights[i] != weights[i] || weights[i] > 1e10) {
 			std::cerr << "Index: " << i << ", weight: " << weights[i] << ", p: " << p << ", q: " << q << ", th: (" << proposed[i][0];
