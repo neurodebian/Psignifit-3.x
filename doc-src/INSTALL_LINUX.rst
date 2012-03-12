@@ -26,7 +26,7 @@ Obtaining the Sources
 ---------------------
 
 You will want to download the most recent version of psignifit from:
-`<http://sourceforge.net/.projects/psignifit/files/>`_. You will want the
+`<http://sourceforge.net/projects/psignifit/files/>`_. You will want the
 ``zip`` file, for example ``psignifit_3.0_beta.20120207.1.zip``.
 
 Extract the file, and enter the directory by typing::
