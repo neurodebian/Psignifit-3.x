@@ -1,3 +1,14 @@
+psignifit (3.0~beta.20120309.1-1) unstable; urgency=low
+
+  * shared library
+  * jeffrey's prior
+  * bugfix: too narrow posteriors in ASIR
+  * tagged, signed releases
+  * new release markers
+  * multiple minor fixes in code and documentation
+
+ -- Nikolaus Valentin Hänel <valentin.haenel@gmx.de>  Wed, 14 Mar 2012 17:19:44 +0000
+
 psignifit (3.0~beta.20111109.1-1) unstable; urgency=low
 
   * Initial release (Closes: #580499)
