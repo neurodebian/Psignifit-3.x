@@ -6,7 +6,7 @@ Uploaders: Michael Hanke <mih@debian.org>
 Build-Depends: debhelper (>= 7.0.50~), python-all-dev, swig (>= 1.3.40~),
   python-support (>= 0.6), python-nose, python-numpy, python-matplotlib,
   python-scipy
-Standards-Version: 3.9.2
+Standards-Version: 3.9.3
 Homepage: http://psignifit.sourceforge.net
 Vcs-Git: git://psignifit.git.sf.net/gitroot/psignifit/psignifit
 Vcs-Browser: http://psignifit.git.sf.net/git/gitweb-index.cgi
