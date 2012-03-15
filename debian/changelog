@@ -1,3 +1,29 @@
+psignifit (3.0~beta.20120309.1-2) unstable; urgency=low
+
+  * Bumped standards version from 3.9.2 to 3.9.3, no changes required
+  * Bumped the copyright year.
+  * Revised debian changelog at the request of Michael Hanke
+  * This is a combined bugfix and feature release.
+  * The toolbox was refactored to support compilation as a static library. The
+    Python wrappers are linked against this static library
+  * Experimental support for modelling with Jeffrey's prior. Documentation to
+    follow. Jeffrey's prior is a noninformative prior that is invariant with
+    respect to a number of transformations. Jeffrey's prior can not be applied
+    to a single parameter. There is now a new psychometric function object
+    that uses Jeffrey's prior.
+  * The Bayesian posterior when using ASIR was too narrow. As
+    it turned out, these problems were mainly related to some of the prior
+    distributions that were evaluated at undefined points. This is now fixed
+  * Our releases are now tagges with signed git tags signed by Ingo Fründ
+    (0x3614F9D9). This allows anyone who has signed this key to verify that
+    the release tag was actually created by Ingo Fründ.
+  * We also revised the format for the tags. Before we were using
+    snap-YYYY-MM-YY. Now we use release/3.0_beta.YYYYMMDD.N, where N can be
+    used to mark multiple releases on the same day.
+  * Lastly there were a large number of minor typos and trivial fixes.
+
+ -- Nikolaus Valentin Hänel <valentin.haenel@gmx.de>  Thu, 15 Mar 2012 12:25:28 +0000
+
 psignifit (3.0~beta.20120309.1-1) unstable; urgency=low
 
   * shared library
