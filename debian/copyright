@@ -3,13 +3,13 @@ Upstream-Name: psignifit3
 Source: http://psignifit.sf.net
 
 Files: *
-Copyright: 2010,2011 Ingo Fründ
-           2010,2011 Valentin Haenel
+Copyright: 2010-2012 Ingo Fründ
+           2010-2012 Valentin Haenel
 License: Expat
 
 Files: debian/*
-Copyright: 2011 Valentin Haenel <psignifit-users@lists.sourceforge.net>
-           2011 Michael Hanke <michael.hanke@gmail.com>
+Copyright: 2011-2012 Valentin Haenel <psignifit-users@lists.sourceforge.net>
+           2011-2012 Michael Hanke <michael.hanke@gmail.com>
 License: Expat
 
 Files: doc-src/extapi.py
