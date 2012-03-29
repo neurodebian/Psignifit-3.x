@@ -13,10 +13,10 @@ PsiData::PsiData (
 	std::vector<int>    k,
 	int nAFC
 	) :
-	intensities(x), Ntrials(N), Ncorrect(k), Pcorrect(k.size()), logNoverK(k.size()), Nalternatives(nAFC)
+	intensities(x), Ntrials(N), Ncorrect(k), Pcorrect(k.size()), logNoverK(k.size()), Nalternatives(nAFC), nblocks ( x.size() )
 {
 	unsigned int i,n;
-	for ( i=0; i<k.size(); i++ ) {
+	for ( i=0; i<nblocks; i++ ) {
 		Pcorrect[i] = double(Ncorrect[i])/Ntrials[i];
 		logNoverK[i] = 0;
 		for ( n=1; n<=(unsigned int) (k[i]); n++ )
@@ -30,11 +30,11 @@ PsiData::PsiData (
 	std::vector<double> p,
 	int nAFC
 	) :
-	intensities(x), Ntrials(N), Ncorrect(p.size()), Pcorrect(p), Nalternatives(nAFC)
+	intensities(x), Ntrials(N), Ncorrect(p.size()), Pcorrect(p), Nalternatives(nAFC), nblocks ( x.size() )
 {
 	unsigned int i;
 	double k;
-	for ( i=0; i<p.size(); i++ ) {
+	for ( i=0; i<nblocks; i++ ) {
 		k = Ntrials[i] * Pcorrect[i];
 		if ( fabs(k-int(k)) > 1e-7 )    // The fraction of correct responses does not correspond to an integer number of correct responses
 			std::cerr << "WARNING: fraction of correct responses does not correspond to an integer number of correct responses!\n";
@@ -50,7 +50,7 @@ void PsiData::setNcorrect ( const std::vector<int>& newNcorrect )
 {
 	Ncorrect = newNcorrect;
 	unsigned int i;
-	for ( i=0; i<Ncorrect.size(); i++ )
+	for ( i=0; i<nblocks; i++ )
 		Pcorrect[i] = double(Ncorrect[i])/Ntrials[i];
 }
 
@@ -82,7 +82,7 @@ const std::vector<double>& PsiData::getPcorrect ( void ) const
 
 double PsiData::getIntensity ( unsigned int i ) const
 {
-	if ( i>=0 && i<intensities.size() )
+	if ( i>=0 && i<nblocks )
 		return intensities[i];
 	else
 		throw BadIndexError();
@@ -90,7 +90,7 @@ double PsiData::getIntensity ( unsigned int i ) const
 
 int PsiData::getNtrials ( unsigned int i ) const
 {
-	if ( i>=0 && i<Ntrials.size() )
+	if ( i>=0 && i<nblocks )
 		return Ntrials[i];
 	else
 		throw BadIndexError();
@@ -98,7 +98,7 @@ int PsiData::getNtrials ( unsigned int i ) const
 
 int PsiData::getNcorrect ( unsigned int i ) const
 {
-	if ( i>=0 && i<Ncorrect.size() )
+	if ( i>=0 && i<nblocks )
 		return Ncorrect[i];
 	else
 		throw BadIndexError();
@@ -106,7 +106,7 @@ int PsiData::getNcorrect ( unsigned int i ) const
 
 double PsiData::getPcorrect ( unsigned int i ) const
 {
-	if ( i>=0 && i<Pcorrect.size() )
+	if ( i>=0 && i<nblocks )
 		return Pcorrect[i];
 	else
 		throw BadIndexError();
@@ -114,7 +114,7 @@ double PsiData::getPcorrect ( unsigned int i ) const
 
 double PsiData::getNoverK ( unsigned int i ) const
 {
-	if ( i>=0 && i<logNoverK.size() )
+	if ( i>=0 && i<nblocks )
 		return logNoverK[i];
 	else
 		throw BadIndexError();

@@ -28,6 +28,7 @@ class PsiData
 		std::vector <double> Pcorrect;
 		std::vector <double> logNoverK;
 		int Nalternatives;
+		unsigned int nblocks;
 	public:
 		PsiData (
 			std::vector<double> x,     ///< Stimulus intensities
@@ -54,7 +55,7 @@ class PsiData
 		int getNcorrect ( unsigned int i ) const;                                 ///< get the numbers of correct trials for block i
 		double getPcorrect ( unsigned int i ) const;                              ///< get the fraction of correct trials for block i
 		int getNalternatives ( void ) const;                             ///< get the number of response alternatives (1 means yes/no task)
-		unsigned int getNblocks ( void ) const { return intensities.size(); }     ///< get the number of blocks in the data set
+		unsigned int getNblocks ( void ) const { return nblocks; }     ///< get the number of blocks in the data set
 		double getNoverK (unsigned int i ) const;                                 ///< return the log of NoverK for block i
 		std::vector<int> nonasymptotic ( void ) const;                   ///< a vector of indices of those blocks for which the data are not in either asymptote
 };

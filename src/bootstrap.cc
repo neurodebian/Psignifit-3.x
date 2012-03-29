@@ -53,9 +53,11 @@ BootstrapList bootstrap ( unsigned int B, const PsiData * data, const PsiPsychom
 #endif
 	BootstrapList bootstrapsamples ( B, model->getNparams(), data->getNblocks(), cuts );
 	unsigned int b,k,cut;                               // iteration variables for bootstrap sample, block, l-general purpose third level iteration, cut
-	std::vector< std::vector<double> > l_LF (cuts.size(), std::vector<double>(B));   // vector of double-vectors
-	std::vector< std::vector<double> > u_t  (cuts.size(), std::vector<double>(B));
-	std::vector< std::vector<double> > u_s  (cuts.size(), std::vector<double>(B));
+	unsigned int nblocks ( data->getNblocks() );
+	unsigned int ncuts ( cuts.size() );
+	std::vector< std::vector<double> > l_LF (ncuts, std::vector<double>(B));   // vector of double-vectors
+	std::vector< std::vector<double> > u_t  (ncuts, std::vector<double>(B));
+	std::vector< std::vector<double> > u_s  (ncuts, std::vector<double>(B));
 	PsiOptimizer opt ( model, data );                          // for ML-Fitting
 	PsiData * localdataset = new PsiData ( data->getIntensities(),  // local because it changes in every iteration
 			data->getNtrials(),
@@ -81,13 +83,13 @@ BootstrapList bootstrap ( unsigned int B, const PsiData * data, const PsiPsychom
 	}
 
 	std::vector<double> localfit   ( model->getNparams() );
-	std::vector<int>    sample     ( data->getNblocks() );
-	std::vector<double> initialthresholds ( cuts.size() );
-	std::vector<double> initialslopes     ( cuts.size() );
+	std::vector<int>    sample     ( nblocks );
+	std::vector<double> initialthresholds ( ncuts );
+	std::vector<double> initialslopes     ( ncuts );
 	std::vector<double> devianceresiduals ( data->getNblocks() );
 	double deviance;
 
-	for (cut=0; cut<cuts.size(); cut++) {
+	for (cut=0; cut<ncuts; cut++) {
 		initialthresholds[cut] = model->getThres(initialfit,cuts[cut]);
 		initialslopes[cut]     = model->getSlope(initialfit,initialthresholds[cut]);
 	}
@@ -101,7 +103,7 @@ BootstrapList bootstrap ( unsigned int B, const PsiData * data, const PsiPsychom
 		// Fit
 		localfit = opt.optimize (model, localdataset, &initialfit );
 #ifdef DEBUG_BOOTSTRAP
-		for (l=0; l<sample.size(); l++)
+		for (l=0; l<nblocks; l++)
 			std::cerr << " " << sample[l] << "\n";
 		std::cerr << localfit[0] << " " << localfit[1] << " " << localfit[2] << "\n";
 #endif
@@ -114,7 +116,7 @@ BootstrapList bootstrap ( unsigned int B, const PsiData * data, const PsiPsychom
 		bootstrapsamples.setRkd ( b, model->getRkd( devianceresiduals, localdataset ) );
 
 		// Store what we need for the BCa stuff
-		for (cut=0; cut<cuts.size(); cut++) {
+		for (cut=0; cut<ncuts; cut++) {
 			l_LF[cut][b] = model->leastfavourable ( localfit, localdataset, cuts[cut] );
 #ifdef DEBUG_BOOTSTRAP
 			if (l_LF[cut][b] != l_LF[cut][b]) {
