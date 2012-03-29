@@ -89,7 +89,7 @@ double PsiPsychometric::negllikeli ( const std::vector<double>& prm, const PsiDa
 		else
 			l += 1e10;
 		if (p<1)
-			l -= (n-k)*log(1-p);
+			l -= (n-k)*log1p(-p);
 		else
 			l += 1e10;
 	}
