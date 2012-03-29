@@ -168,6 +168,19 @@ class PsiInference ( object ):
         def fset ( self, v ):
             self.__plotting["marker"] = v
 
+    def __getstate__ ( self ):
+        state = self.__dict__.copy()
+        del state['_pmf']
+        del state['_data']
+        return state
+
+    def __setstate__ ( self, state ):
+        self.__dict__.update(state)
+        self._data,self._pmf,self.nparams = sfu.make_dataset_and_pmf (
+                self.data, self.model["nafc"], self.model["sigmoid"], self.model["core"], self.model["priors"], gammaislambda=self.model["gammaislambda"] )
+
+
+
 ##############################################################################################################################
 class BootstrapInference ( PsiInference ):
     def __init__ ( self, data, sample=False, cuts=(.25,.5,.75), conf=(.025,.975), plotprm=None, **kwargs ):
