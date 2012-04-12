@@ -102,12 +102,13 @@ double PsiPsychometric::leastfavourable ( const std::vector<double>& prm, const 
 	if (!threshold) throw NotImplementedError();  // So far we only have this for the threshold
 
 	std::vector<double> delta (prm.size(),0), du(prm.size(),0);
-	Matrix * I;
+	Matrix * I = new Matrix ( prm.size(), prm.size() );
 	double ythres;
 	double rz,nz,xz,pz,fac1;
 	double l_LF(0);
 	double s;
-	unsigned int i,z;
+	unsigned int i,z,k,j;
+	double pk,dpi,dpj,dd;
 
 	// Fill u
 	ythres = Sigmoid->inv(cut);
@@ -115,7 +116,20 @@ double PsiPsychometric::leastfavourable ( const std::vector<double>& prm, const 
 	du[1] = Core->dinv(ythres,prm,1);
 
 	// Determine 2nd derivative
-	I = ddnegllikeli ( prm, data );
+	// I = ddnegllikeli ( prm, data ); // This is the observed fisher information
+	// calculate expected Fisher Information
+	for ( i=0; i<getNparams(); i++ ) {
+		for ( j=i; j<getNparams(); j++ ) {
+			dd = 0;
+			for ( k=0; k<data->getNblocks(); k++ ) {
+				pk = evaluate ( data->getIntensity(k), prm );
+				dpi = dpredict ( prm, data->getIntensity(k), i );
+				dpj = dpredict ( prm, data->getIntensity(k), j );
+				dd += data->getNtrials(k) * (1./pk + 1./(1-pk)) * dpi * dpj;
+			}
+			(*I)(i,j) = (*I)(j,i) = dd;
+		}
+	}
 
 	// Now we have to solve I*delta = du for delta
 	try {
