@@ -17,10 +17,25 @@ class PsiOptimizer
 		int nparameters;                             // Number of parameters
 		std::vector< std::vector<double> > simplex;  // data of the simplex
 		std::vector<double> fx;                      // function values at the simplex nodes
-		std::vector<double> x;                       // a single simplex node
-		std::vector<double> xx;                      // another single simplex node
+		std::vector<double> centroid;                // controid of the simplex
+		std::vector<double> newnode;                 // new, suggested simplex node
 		std::vector<double> start;                   // starting values
 		std::vector<bool>   modified;                // bookkeeping vector to indicate which simplex nodes have changed, i.e. which function values need to be updated
+		void initialize_simplex (
+				const PsiPsychometric * model,
+				const PsiData * data,
+				const std::vector<double>* startingvalue=NULL
+				);
+		void reevaluate_simplex ( const PsiPsychometric * model,
+				const PsiData * data,
+				int * maxind,
+				int * minind,
+				std::vector<double> * workspace
+				);
+		void calculate_centroid ( int excluded );
+		void reflect ( int maxind );
+		void expand ( int maxind );
+		void shrink ( int minind );
 	public:
 		PsiOptimizer (
 			const PsiPsychometric * model,           ///< model to be fitted (this is needed at this point only to determine the amount of internal memory that is required)
