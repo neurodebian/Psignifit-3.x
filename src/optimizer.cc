@@ -7,6 +7,8 @@
 #include <cmath>
 #include <limits>
 
+#define kTolerance 1e-6
+
 // #define DEBUG_OPTIMIZER
 
 #ifdef DEBUG_OPTIMIZER
@@ -205,6 +207,11 @@ std::vector<double> PsiOptimizer::optimize ( const PsiPsychometric * model, cons
 			for (k=0; k<nparameters; k++)
 				stepsize += (simplex[maxind][k]-simplex[minind][k])*(simplex[maxind][k]-simplex[minind][k]);
 			// Simplex size
+			// Convergence criterion from psignifit-classic
+			if ( kTolerance >= 2. * fabs ( fx[maxind] - fx[minind] )/(fabs(fx[maxind])+fabs(fx[minind])) ) {
+				break;
+			}
+			// Step size
 			if (stepsize<maxstep) {
 #ifdef DEBUG_OPTIMIZER
 				logfile << "Terminating optimization due to small simplex size (" << stepsize << ") after " << iter << " iterations\n";
