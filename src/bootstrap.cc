@@ -75,6 +75,10 @@ BootstrapList bootstrap ( unsigned int B, const PsiData * data, const PsiPsychom
 		}
 	} else
 		initialfit = *param;
+
+	std::cout << initialfit[0] << ", " << initialfit[1] << ", " << initialfit[2] << "\n";
+	std::cout << model->deviance ( initialfit, data ) << "\n";
+
 	std::vector<double> p          ( data->getNblocks() );       // predicted p-correct for parametric bootstrap
 	if (parametric) {
 		for ( k=0; k<data->getNblocks(); k++ ) { p[k] = model->evaluate ( data->getIntensity(k), initialfit ); }
@@ -86,7 +90,7 @@ BootstrapList bootstrap ( unsigned int B, const PsiData * data, const PsiPsychom
 	std::vector<int>    sample     ( nblocks );
 	std::vector<double> initialthresholds ( ncuts );
 	std::vector<double> initialslopes     ( ncuts );
-	std::vector<double> devianceresiduals ( data->getNblocks() );
+	std::vector<double> devianceresiduals ( nblocks );
 	double deviance;
 
 	for (cut=0; cut<ncuts; cut++) {
@@ -109,8 +113,9 @@ BootstrapList bootstrap ( unsigned int B, const PsiData * data, const PsiPsychom
 #endif
 
 		// Get some characteristics of the localfit
-		deviance = model->deviance ( localfit, localdataset );
+		// deviance = model->deviance ( localfit, localdataset );
 		devianceresiduals = model->getDevianceResiduals ( localfit, localdataset );
+		deviance = 0; for  ( k=0; k<nblocks; k++ ) deviance += devianceresiduals[k]*devianceresiduals[k];
 		bootstrapsamples.setEst ( b, localfit, deviance );
 		bootstrapsamples.setRpd ( b, model->getRpd( devianceresiduals, localfit, localdataset ) );
 		bootstrapsamples.setRkd ( b, model->getRkd( devianceresiduals, localdataset ) );

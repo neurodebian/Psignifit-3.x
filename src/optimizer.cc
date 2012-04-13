@@ -352,21 +352,6 @@ std::vector<double> PsiOptimizer::optimize ( const PsiPsychometric * model, cons
 		}
 	}
 
-	/*
-	// Perform some Gradient descent steps
-	for (k=0; k<40; k++) {
-		x = model->dnegllikeli ( start, data );
-		dl = 0;
-		for (l=0; l<nparameters; l++) {
-			start[l] -= .1*x[l];
-			if (fabs(x[l])>dl)
-				dl = fabs(x[l]);
-		}
-		if (dl<1e-6)
-			break;
-	}
-	*/
-
 #ifdef DEBUG_OPTIMIZER
 	logfile << "Returning\n"; logfile.flush();
 
