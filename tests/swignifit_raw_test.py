@@ -380,8 +380,3 @@ class TestLinalg(ut.TestCase):
         matrix.symmetric()
         # TODO use a dependent matrix (all ones) to test that decompositions,
         # solve and inverse don't work
-
-if __name__ == "__main__":
-    #ut.main()
-    suite = ut.TestLoader().loadTestsFromName("__main__")
-    ut.TextTestRunner(verbosity=2).run(suite)

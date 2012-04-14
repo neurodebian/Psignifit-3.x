@@ -19,6 +19,7 @@ PSIPP_SRC=src
 LIBRARY_PATH=$(DESTDIR)/usr/lib/
 LD_LIBRARY_PATH=src/build
 PYTHON=python
+NOSE=nosetests -v
 CLI_SRC=cli
 TODAY=`date +%d-%m-%G`
 LONGTODAY=`date +%G%m%d`
@@ -29,7 +30,7 @@ TAR_FILE=psignifit_${FILENAME_PREFIX}.tar
 ZIP_FILE=psignifit_${FILENAME_PREFIX}.zip
 WINDOWS_CLI_INSTALLER=psignifit_${FILENAME_PREFIX}_installer.exe
 WINDOWS_PY_INSTALLER=psignifit_${FILENAME_PREFIX}_win32-py2.6.exe
-GIT_DESCRIPTION=`git describe --tags`
+GIT_DESCRIPTION=`git describe`
 CLI_VERSION_HEADER=cli/cli_version.h
 MPSIGNIFIT_VERSION=mpsignifit/psignifit_version.m
 PYPSIGNIFIT_VERSION=pypsignifit/__version__.py
@@ -109,6 +110,8 @@ doc: python-doc psipp-doc
 clean: clean-python-doc clean-python psipp-clean cli-clean mpsignifit-clean
 
 test: swignifit-test psipp-test
+
+test-extended: test swignifit-test-interface-extended
 
 # }}}
 
@@ -229,23 +232,28 @@ swignifit-clean:
 	-rm -rv swignifit/_swignifit_raw.so
 	-rm -rv swignifit/*.pyc
 
-swignifit-test: swignifit-test-raw swignifit-test-interface swignifit-test-utility
+swignifit-test: swignifit
+	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(NOSE) \
+		tests/swignifit_raw_test.py tests/interface_test.py tests/utility_test.py
 
 swignifit-test-raw: swignifit
-	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) tests/swignifit_raw_test.py
+	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(NOSE) tests/swignifit_raw_test.py
 
 swignifit-test-interface: swignifit
-	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) tests/interface_test.py
+	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(NOSE) tests/interface_test.py
 
 swignifit-test-utility: swignifit
-	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) tests/utility_test.py
+	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(NOSE) tests/utility_test.py
+
+swignifit-test-interface-extended: swignifit
+	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(NOSE) tests/test_interface_extended.py
 
 # }}}
 
 #################### PYPSIGNIFIT COMMANDS ################### {{{
 
 pypsignifit-test:
-	PYTHONPATH=. $(PYTHON) pypsignifit/psignidata.py
+	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) pypsignifit/psignidata.py
 
 # }}}
 
