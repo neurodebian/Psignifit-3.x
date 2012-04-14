@@ -1493,5 +1493,8 @@ int main ( int argc, char ** argv ) {
 	Tests.addTest(&GetstartTest,          "Finding good starting values" );
 	Tests.addTest ( &IntegrateTest,        "Approximate numerical integration" );
 
-	Tests.runTests();
+	int failed = Tests.runTests();
+    if (failed > 0){
+        exit(2);
+    }
 }
