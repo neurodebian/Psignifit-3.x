@@ -6,6 +6,9 @@ export DH_OPTIONS
 %:
 	dh $@ --buildsystem=python_distutils
 
+override_dh_auto_test:
+	${MAKE} test
+	dh_auto_test
 
 override_dh_auto_build:
 	$(MAKE) -C src libpsipp.so
