@@ -191,10 +191,3 @@ class TestDiagnostics(ut.TestCase):
     def test_empty_data(self):
         # if an empty sequence is passed we only obtain the threshold
         result = interface.diagnostics([], TestDiagnostics.prm)
-
-
-
-if __name__ == "__main__":
-    suite = ut.TestLoader().loadTestsFromName("__main__")
-    ut.TextTestRunner(verbosity=2).run(suite)
-

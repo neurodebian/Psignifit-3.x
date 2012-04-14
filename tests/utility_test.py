@@ -85,7 +85,3 @@ class TestUtility(ut.TestCase):
         # operator.isNumberType() on an ndarry is always true
         cuts = np.array([1.0, 2.0, 3.0])
         sfu.get_cuts(cuts)
-
-if __name__ == "__main__":
-    ut.main()
-
