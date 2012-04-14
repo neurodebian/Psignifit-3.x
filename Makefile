@@ -111,6 +111,8 @@ clean: clean-python-doc clean-python psipp-clean cli-clean mpsignifit-clean
 
 test: swignifit-test psipp-test
 
+test-extended: test swignifit-test-interface-extended
+
 # }}}
 
 #################### PYTHON DEFINITIONS ################### {{{
@@ -242,6 +244,9 @@ swignifit-test-interface: swignifit
 
 swignifit-test-utility: swignifit
 	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(NOSE) tests/utility_test.py
+
+swignifit-test-interface-extended: swignifit
+	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(NOSE) tests/test_interface_extended.py
 
 # }}}
 
