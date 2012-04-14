@@ -19,6 +19,7 @@ PSIPP_SRC=src
 LIBRARY_PATH=$(DESTDIR)/usr/lib/
 LD_LIBRARY_PATH=src/build
 PYTHON=python
+NOSE=nosetests -v
 CLI_SRC=cli
 TODAY=`date +%d-%m-%G`
 LONGTODAY=`date +%G%m%d`
@@ -232,13 +233,13 @@ swignifit-clean:
 swignifit-test: swignifit-test-raw swignifit-test-interface swignifit-test-utility
 
 swignifit-test-raw: swignifit
-	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) tests/swignifit_raw_test.py
+	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(NOSE) tests/swignifit_raw_test.py
 
 swignifit-test-interface: swignifit
-	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) tests/interface_test.py
+	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(NOSE) tests/interface_test.py
 
 swignifit-test-utility: swignifit
-	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) tests/utility_test.py
+	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(NOSE) tests/utility_test.py
 
 # }}}
 
