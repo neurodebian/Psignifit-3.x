@@ -1,4 +1,4 @@
-psignifit (3.0~beta.XXXXXXXX.1-1) unstable; urgency=low
+psignifit (3.0~beta.XXXXXXXX.1-1) UNRELEASED; urgency=low
 
   * Bumped standards version from 3.9.2 to 3.9.3, no changes required
   * Bumped the copyright year.
