@@ -245,7 +245,7 @@ swignifit-test-utility: swignifit
 #################### PYPSIGNIFIT COMMANDS ################### {{{
 
 pypsignifit-test:
-	PYTHONPATH=. $(PYTHON) pypsignifit/psignidata.py
+	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(PYTHON) pypsignifit/psignidata.py
 
 # }}}
 
