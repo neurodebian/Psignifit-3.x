@@ -230,7 +230,9 @@ swignifit-clean:
 	-rm -rv swignifit/_swignifit_raw.so
 	-rm -rv swignifit/*.pyc
 
-swignifit-test: swignifit-test-raw swignifit-test-interface swignifit-test-utility
+swignifit-test: swignifit
+	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(NOSE) \
+		tests/swignifit_raw_test.py tests/interface_test.py tests/utility_test.py
 
 swignifit-test-raw: swignifit
 	PYTHONPATH=. LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) $(NOSE) tests/swignifit_raw_test.py
