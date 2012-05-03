@@ -1,3 +1,9 @@
+2012-05-03 - Psignifit-3.x - release/3.0_beta.20120503.1
+
+* minor bugfix release
+* pickle functionality thanks to Brad Buran
+* unit tests give non zero exit status on failure
+
 2012-03-09 - Psignifit-3.x - release/3.0_beta.20120309.1
 
 * shared library
