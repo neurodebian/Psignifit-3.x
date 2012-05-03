@@ -86,6 +86,15 @@ class TestBootstrapInference ( ut.TestCase ):
     def test_keywordhandling ( self ):
         self.assertRaises ( ValueError, pd.BootstrapInference, self.parametric.data, shape="logistic" )
 
+    def test_pickling ( self ):
+        import pickle
+
+        string = pickle.dumps ( self.parametric )
+        unpickled_parametric = pickle.loads ( string )
+
+        string = pickle.dumps ( self.nonparametric )
+        unpickled_nonparametric = pickle.loads ( string )
+
 class TestBayesInference ( ut.TestCase ):
     def setUp ( self ):
         sft.setSeed(0)
@@ -142,6 +151,11 @@ class TestBayesInference ( ut.TestCase ):
                 self.assertEqual ( approximatedly_equal ( self.mcmc.mcthres[indices[k]][l], target_mcthres[k][l] ), 0 )
     def test_keywordhandling ( self ):
         self.assertRaises ( ValueError, pd.BayesInference, self.mcmc.data, shape="logistic" )
+    def test_pickling ( self ):
+        import pickle
+        string = pickle.dumps ( self.mcmc )
+        unpickled_mcmc = pickle.loads ( string )
+        self.mcmc = unpickled_mcmc
 
 class Testcheck_kwargs ( ut.TestCase ):
     def test_checking ( self ):

@@ -144,6 +144,13 @@ def find_index ( Z, test=mctest, kstart=1 ):
             raise IndexError
         k += 1
 
+class MCMCpar (dict):
+    def __init__ (self, d):
+        dict.__init__(self,d)
+    burnin = property ( fget=lambda self: self.setdefault("M",0) )
+    thin   = property ( fget=lambda self: self.setdefault("kthin",1) )
+    Nsamples = property ( fget=lambda self: self.setdefault("N",self.setdefault("Nmin",1000) ) )
+
 def gibbsit ( D=None, q=0.025, r=0.0125, s=0.95, eps=0.001 ):
     """The real gibbsit routine
 
@@ -170,12 +177,6 @@ def gibbsit ( D=None, q=0.025, r=0.0125, s=0.95, eps=0.001 ):
     # A correction parameter that is used multiple times
     phiterm = (stats.norm.ppf ( 0.5*(s+1) ) / r)**2
 
-    class MCMCpar (dict):
-        def __init__ (self, d):
-            dict.__init__(self,d)
-        burnin = property ( fget=lambda self: self.setdefault("M",0) )
-        thin   = property ( fget=lambda self: self.setdefault("kthin",1) )
-        Nsamples = property ( fget=lambda self: self.setdefault("N",self.setdefault("Nmin",1000) ) )
     params = MCMCpar({})
 
     if not D is None:
