@@ -1,11 +1,11 @@
-psignifit (3.0~beta.XXXXXXXX.1-1) UNRELEASED; urgency=low
+psignifit (3.0~beta.20120503.1-1) unstable; urgency=low
 
   * Bumped standards version from 3.9.2 to 3.9.3, no changes required
   * Bumped the copyright year.
   * This is a combined bugfix and feature release.
   * Initial release (Closes: #580499)
 
- -- Nikolaus Valentin Hänel <valentin.haenel@gmx.de>  Thu, 15 Mar 2012 12:25:28 +0000
+ -- Nikolaus Valentin Hänel <valentin.haenel@gmx.de>  Thu, 03 May 2012 21:45:33 +0200
 
 psignifit (3.0~beta.20111109.1-1) neurodebian; urgency=low
 
