@@ -3,6 +3,7 @@ psignifit (3.0~beta.20120503.1-1) unstable; urgency=low
   * Bumped standards version from 3.9.2 to 3.9.3, no changes required
   * Bumped the copyright year.
   * add python-tk as dependency, ndtools showed that test fail without it
+  * add a patch to fix test precision in patches/test_precision
   * This is a combined bugfix and feature release.
   * Initial release (Closes: #580499)
 
