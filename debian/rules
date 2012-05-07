@@ -12,6 +12,8 @@ override_dh_auto_test:
 
 override_dh_auto_build:
 	$(MAKE) -C src libpsipp.so
+	# Inject debian version into binary package
+	echo "version = \"$$(dpkg-parsechangelog  | grep Version | cut -f2 -d' ')\"">> pypsignifit/__version__.py
 	$(MAKE) swig
 	dh_auto_build
 
