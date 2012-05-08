@@ -2,12 +2,13 @@ psignifit (3.0~beta.20120503.1-1) unstable; urgency=low
 
   * Bumped standards version from 3.9.2 to 3.9.3, no changes required
   * Bumped the copyright year.
-  * add python-tk as dependency, ndtools showed that test fail without it
-  * add a patch to fix test precision in patches/test_precision
-  * This is a combined bugfix and feature release.
+  * Add python-tk as dependency, ndtools showed that test fail without it
+  * Add a patch to fix test precision on i386 in patches/test_precision
+  * Inject debian version number into python module
+  * This is a combined bugfix and feature release from upstream
   * Initial release (Closes: #580499)
 
- -- Nikolaus Valentin Hänel <valentin.haenel@gmx.de>  Thu, 03 May 2012 21:45:33 +0200
+ -- Nikolaus Valentin Hänel <valentin.haenel@gmx.de>  Tue, 08 May 2012 09:39:54 +0200
 
 psignifit (3.0~beta.20111109.1-1) neurodebian; urgency=low
 
