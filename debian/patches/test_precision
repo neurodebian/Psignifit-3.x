@@ -1,3 +1,8 @@
+From: Valentin Haenel <valentin.haenel@gmx.de>
+Subject: Fix test precision
+
+Fix te precision of the test so that it passes on amd64 and i386
+
 Index: psignifit/src/tests_all.cc
 ===================================================================
 --- psignifit.orig/src/tests_all.cc	2012-05-06 21:14:26.000000000 +0200
